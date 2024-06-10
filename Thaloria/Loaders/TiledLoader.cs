@@ -8,10 +8,10 @@ namespace Thaloria.Loaders
 {
   internal sealed class TiledLoader
   {
-    private static readonly int GroundLayerId = 0;
+    private static readonly int GroundLayerId = 1;
     private static readonly int[] GroundLayerIdIGnoreds = [0];
 
-    private static readonly int TopLayerId = 1;
+    private static readonly int TopLayerId = 2;
     private static readonly int[] TopLayerIdIgnores = [0];
 
 
@@ -51,16 +51,18 @@ namespace Thaloria.Loaders
       {
         for (var y = 0; y < mapData.Height; y++)
         {
-          for (var layerId = 0; layerId < mapData.Layers.Count; layerId++)
+          foreach (var layer in mapData.Layers)
           {
-            var layer = mapData.Layers[layerId];
+            // Ignore for now until I implement collision
+            if (!layer.Type.Equals("tilelayer"))
+              continue;
             
             var tileId = GetValue(x,y,layer.Data,layer.Width,layer.Height);
 
-            if (layerId == GroundLayerId && GroundLayerIdIGnoreds.Contains(tileId))
+            if (layer.Id == GroundLayerId && GroundLayerIdIGnoreds.Contains(tileId))
               continue;
 
-            if (layerId == TopLayerId && TopLayerIdIgnores.Contains(tileId))
+            if (layer.Id == TopLayerId && TopLayerIdIgnores.Contains(tileId))
               continue;
 
             var tileX = x * mapData.Tilewidth;
@@ -79,7 +81,7 @@ namespace Thaloria.Loaders
 
             var renderPos = new Vector2(tileX, tileY);
 
-            tiles.Add(new TileReference(layerId, tileId, texturePos, renderPos));
+            tiles.Add(new TileReference(layer.Id, tileId, texturePos, renderPos));
           }
         }
       }
@@ -101,17 +103,19 @@ namespace Thaloria.Loaders
       return data[index];
     }
 
-    static (int x, int y) GetImageCoordinates(int imageId, int imageWidth, int imageHeight, int textureWidth)
+    static (int x, int y) GetImageCoordinates(int tileId, int imageWidth, int imageHeight, int textureWidth)
     {
       // Calculate the number of columns in the texture
       int cols = textureWidth / imageWidth;
 
       // start at 0 not 1
-      var indexOffset = 1;
+      // zero based index?, need to find out why I actually need this
+      // but works so don't touch
+      tileId--;
 
       // Calculate the column and row based on the image ID
-      int col = (imageId - indexOffset) % cols;
-      int row = imageId / cols;
+      int col = tileId % cols;
+      int row = tileId / cols;
 
       // Calculate the x and y coordinates
       int x = col * imageWidth;
@@ -122,8 +126,8 @@ namespace Thaloria.Loaders
 
     public readonly struct TileReference(int layerId, int tileId, Rectangle texturePos, Vector2 renderPos)
     {
-      public readonly int LayerId = layerId;
-      public readonly int TileId = tileId;
+      public readonly short LayerId = (short)layerId;
+      public readonly short TileId = (short)tileId;
       public readonly Rectangle TexturePosition = texturePos;
       public readonly Vector2 RenderPosition = renderPos;
     }
