@@ -2,6 +2,7 @@
 using static Raylib_cs.Raymath;
 using Thaloria.Loaders;
 using static Raylib_cs.Raylib;
+using System.Numerics;
 
 namespace Thaloria
 {
@@ -14,40 +15,52 @@ namespace Thaloria
       var windowWidth = 1280;
       var windowHeight = 720;
 
-      var playerWidth = 10;
-      var playerHeight = 10;
+      // scaling
+      var gameScreenWidth = 640;
+      var gameScreenHeight = 480;
 
-      SetConfigFlags(ConfigFlags.VSyncHint);
+      SetConfigFlags(ConfigFlags.ResizableWindow | ConfigFlags.VSyncHint);
+      InitWindow(windowWidth,windowHeight,"Thaloria");
+      SetWindowMinSize(320, 180);
 
-      InitWindow(windowWidth, windowHeight, "Thaloria");
-      
-      SetTargetFPS(60);
+      SetTargetFPS(30);
 
       var plainsTexture = LoadTexture("Resources\\plains.png");
 
+      RenderTexture2D renderTarget = LoadRenderTexture(gameScreenWidth, gameScreenHeight);
+      SetTextureFilter(renderTarget.Texture, TextureFilter.Bilinear);
+
       var player = new Rectangle 
       {
-        X = windowWidth / 2 - playerWidth / 2,
-        Y = windowHeight / 2 - playerHeight / 2,
-        Width = playerWidth,
-        Height = playerHeight
+        X = 0,
+        Y = 0,
+        Width = 10,
+        Height = 10
       };
 
-      Camera2D camera = new Camera2D();
-      camera.Target = player.Position;
+      Camera2D camera = new()
+      {
+        Target = player.Position,
 
-      camera.Offset = new() {
-        X = windowWidth/2,
-        Y = windowHeight/2
+        Offset = new()
+        {
+          X = gameScreenWidth / 2,
+          Y = gameScreenHeight / 2
+        },
+        Rotation = 0f,
+        Zoom = 2.0f
       };
-      camera.Rotation = 0f;
-      camera.Zoom = 2.0f;
 
-      float speed = 100f;
-      int drawCount = 0;
+      float speed = 250f;
+      int drawCount;
 
       while (!WindowShouldClose())
       {
+        var screenWidth = (float)GetScreenWidth();
+        var screenHeight = (float)GetScreenHeight();
+
+        var scale = MathF.Min(screenWidth / gameScreenWidth, screenHeight / gameScreenHeight);
+
         var force = GetFrameTime() * speed;
 
         if (IsKeyDown(KeyboardKey.A))
@@ -98,7 +111,7 @@ namespace Thaloria
 
         var cameraView = new Rectangle(camera.Target.X-camera.Offset.X/2, camera.Target.Y-camera.Offset.Y/2, camera.Offset.X, camera.Offset.Y);
 
-        BeginDrawing();
+        BeginTextureMode(renderTarget);
         ClearBackground(Color.Black);
         BeginMode2D(camera);
         drawCount = 0;
@@ -118,10 +131,24 @@ namespace Thaloria
         DrawRectangleLinesEx(cameraView, 1, Color.Yellow);
         DrawRectangleRec(player, Color.Green);
         EndMode2D();
+        EndTextureMode();
+
+        BeginDrawing();
+        ClearBackground(Color.Black);
+        var sourceRec = new Rectangle(0f,0f,(float)renderTarget.Texture.Width,(float)-renderTarget.Texture.Height);
+        var destinationRec = new Rectangle(
+          (screenWidth - ((float)gameScreenWidth*scale))*0.5f,
+          (screenHeight - ((float)gameScreenHeight*scale))*0.5f,
+          (float)gameScreenWidth*scale,
+          (float)gameScreenHeight*scale);
+
+        DrawTexturePro(renderTarget.Texture,sourceRec,destinationRec,new Vector2(0,0), 0f, Color.White);
         DrawFPS(15,10);
-        DrawText($"Tiles drawn: {drawCount}",150,150,18,Color.Red);
+        DrawText($"Tiles: {drawCount}",15,35,25,Color.Red);
         EndDrawing();
       }
+
+      UnloadTexture(renderTarget.Texture);
       UnloadTexture(plainsTexture);
       CloseWindow();
     }
