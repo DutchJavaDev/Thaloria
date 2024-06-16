@@ -8,150 +8,154 @@ namespace Thaloria
 {
   static class Program
   {
-		private static ThaloriaGame Thaloria = new();
-	static unsafe void Main(string[] args)
-	{
-	  var worldTiles = TiledLoader.CreateWorldTiles();
-	  
-	  var windowWidth = 1600;
-	  var windowHeight = 900;
+    private readonly static ThaloriaGame Thaloria = new();
+    static unsafe void Main(string[] args)
+    {
+      //var worldTiles = TiledLoader.CreateWorldTiles();
 
-	  // scaling
-	  var gameScreenWidth = 640;
-	  var gameScreenHeight = 480;
+      var windowWidth = 1600;
+      var windowHeight = 900;
 
-	  SetConfigFlags(ConfigFlags.ResizableWindow | ConfigFlags.VSyncHint);
-	  InitWindow(windowWidth,windowHeight,"Thaloria");
-	  SetWindowMinSize(320, 180);
+      // scaling
+      //var gameScreenWidth = 640;
+      //var gameScreenHeight = 480;
 
-	  SetTargetFPS(45);
-	  
-	  var plainsTexture = LoadTexture("Resources\\plains.png");
+      SetConfigFlags(ConfigFlags.ResizableWindow | ConfigFlags.VSyncHint);
+      InitWindow(windowWidth, windowHeight, "Thaloria");
+      SetWindowMinSize(320, 180);
 
-	  RenderTexture2D renderTarget = LoadRenderTexture(gameScreenWidth, gameScreenHeight);
-	  SetTextureFilter(renderTarget.Texture, TextureFilter.Anisotropic16X);
+      SetTargetFPS(45);
 
-	  var player = new Rectangle 
-	  {
-		X = 0,
-		Y = 0,
-		Width = 10,
-		Height = 10
-	  };
+      //var plainsTexture = LoadTexture("Resources\\plains.png");
 
-	  Camera2D camera = new()
-	  {
-		Target = player.Position,
+      //RenderTexture2D renderTarget = LoadRenderTexture(gameScreenWidth, gameScreenHeight);
+      //SetTextureFilter(renderTarget.Texture, TextureFilter.Anisotropic16X);
 
-		Offset = new()
-		{
-		  X = gameScreenWidth / 2,
-		  Y = gameScreenHeight / 2
-		},
-		Rotation = 0f,
-		Zoom = 2.0f
-	  };
+      //var player = new Rectangle
+      //{
+      //  X = 0,
+      //  Y = 0,
+      //  Width = 10,
+      //  Height = 10
+      //};
 
-	  float speed = 250f;
-	  int drawCount;
+      //Camera2D camera = new()
+      //{
+      //  Target = player.Position,
 
-	  while (!WindowShouldClose())
-	  {
-		var screenWidth = (float)GetScreenWidth();
-		var screenHeight = (float)GetScreenHeight();
+      //  Offset = new()
+      //  {
+      //    X = gameScreenWidth / 2,
+      //    Y = gameScreenHeight / 2
+      //  },
+      //  Rotation = 0f,
+      //  Zoom = 2.0f
+      //};
 
-		var scale = MathF.Min(screenWidth / gameScreenWidth, screenHeight / gameScreenHeight);
+      //float speed = 250f;
+      //int drawCount;
+      FontManager.LoadFonts();
+      Thaloria.Init();
 
-		var force = GetFrameTime() * speed;
+      while (!WindowShouldClose())
+      {
+        Thaloria.Run();
+        //var screenWidth = (float)GetScreenWidth();
+        //var screenHeight = (float)GetScreenHeight();
 
-		if (IsKeyDown(KeyboardKey.A))
-		{
-		  player.X -= force;
-		}
+        //var scale = MathF.Min(screenWidth / gameScreenWidth, screenHeight / gameScreenHeight);
 
-		if(IsKeyDown(KeyboardKey.D))
-		{
-		  player.X += force;
-		}
+        //var force = GetFrameTime() * speed;
 
-		if (IsKeyDown(KeyboardKey.W)) 
-		{ 
-		  player.Y -= force; 
-		}
+        //if (IsKeyDown(KeyboardKey.A))
+        //{
+        //  player.X -= force;
+        //}
 
-		if (IsKeyDown(KeyboardKey.S))
-		{
-		  player.Y += force;
-		}
+        //if (IsKeyDown(KeyboardKey.D))
+        //{
+        //  player.X += force;
+        //}
 
-		camera.Target = player.Position;
+        //if (IsKeyDown(KeyboardKey.W))
+        //{
+        //  player.Y -= force;
+        //}
 
-		// Clamp camera to 0 when going left
-		if (camera.Target.X - camera.Offset.X / 2 < 0)
-		{
-		  camera.Target.X = camera.Offset.X / 2;
-		}
+        //if (IsKeyDown(KeyboardKey.S))
+        //{
+        //  player.Y += force;
+        //}
 
-		// Clamp camera to max width when going right
-		if (camera.Target.X + camera.Offset.X / 2 > TiledLoader.WorldWidth)
-		{
-		  camera.Target.X = TiledLoader.WorldWidth - camera.Offset.X / 2;
-		}
+        //camera.Target = player.Position;
 
-		// Clamp camera to 0 when going up
-		if (camera.Target.Y - camera.Offset.Y / 2 < 0)
-		{
-		  camera.Target.Y = camera.Offset.Y / 2;
-		}
+        //// Clamp camera to 0 when going left
+        //if (camera.Target.X - camera.Offset.X / 2 < 0)
+        //{
+        //  camera.Target.X = camera.Offset.X / 2;
+        //}
 
-		// Clamp camera to max height when going down
-		if (camera.Target.Y + camera.Offset.Y / 2 > TiledLoader.WorldHeight)
-		{
-		  camera.Target.Y = TiledLoader.WorldHeight - camera.Offset.Y / 2;
-		}
+        //// Clamp camera to max width when going right
+        //if (camera.Target.X + camera.Offset.X / 2 > TiledLoader.WorldWidth)
+        //{
+        //  camera.Target.X = TiledLoader.WorldWidth - camera.Offset.X / 2;
+        //}
 
-		var cameraView = new Rectangle(camera.Target.X-camera.Offset.X/2, camera.Target.Y-camera.Offset.Y/2, camera.Offset.X, camera.Offset.Y);
+        //// Clamp camera to 0 when going up
+        //if (camera.Target.Y - camera.Offset.Y / 2 < 0)
+        //{
+        //  camera.Target.Y = camera.Offset.Y / 2;
+        //}
 
-		BeginTextureMode(renderTarget);
-		ClearBackground(Color.Black);
-		BeginMode2D(camera);
-		drawCount = 0;
-		foreach (var tile in worldTiles)
-		{
-		  var x = tile.RenderPosition.X;
-		  var y = tile.RenderPosition.Y;
-		  var width = tile.TexturePosition.Width;
-		  var height = tile.TexturePosition.Height;
+        //// Clamp camera to max height when going down
+        //if (camera.Target.Y + camera.Offset.Y / 2 > TiledLoader.WorldHeight)
+        //{
+        //  camera.Target.Y = TiledLoader.WorldHeight - camera.Offset.Y / 2;
+        //}
 
-		  if (CheckCollisionRecs(cameraView, new Rectangle(x, y, width, height)))
-		  { 
-			DrawTextureRec(plainsTexture, tile.TexturePosition, tile.RenderPosition, Color.White);
-			drawCount++;
-		  }
-		}
-		DrawRectangleLinesEx(cameraView, 1, Color.Yellow);
-		DrawRectangleRec(player, Color.Green);
-		EndMode2D();
-		EndTextureMode();
+        //var cameraView = new Rectangle(camera.Target.X - camera.Offset.X / 2, camera.Target.Y - camera.Offset.Y / 2, camera.Offset.X, camera.Offset.Y);
 
-		BeginDrawing();
-		ClearBackground(Color.Black);
-		var sourceRec = new Rectangle(0f,0f,(float)renderTarget.Texture.Width,(float)-renderTarget.Texture.Height);
-		var destinationRec = new Rectangle(
-		  (screenWidth - ((float)gameScreenWidth*scale))*0.5f,
-		  (screenHeight - ((float)gameScreenHeight*scale))*0.5f,
-		  (float)gameScreenWidth*scale,
-		  (float)gameScreenHeight*scale);
+        //BeginTextureMode(renderTarget);
+        //ClearBackground(Color.Black);
+        //BeginMode2D(camera);
+        //drawCount = 0;
+        //foreach (var tile in worldTiles)
+        //{
+        //  var x = tile.RenderPosition.X;
+        //  var y = tile.RenderPosition.Y;
+        //  var width = tile.TexturePosition.Width;
+        //  var height = tile.TexturePosition.Height;
 
-		DrawTexturePro(renderTarget.Texture,sourceRec,destinationRec,new Vector2(0,0), 0f, Color.White);
-		DrawFPS(15,10);
-		DrawText($"Tiles: {drawCount}",15,35,25,Color.Red);
-		EndDrawing();
-	  }
+        //  if (CheckCollisionRecs(cameraView, new Rectangle(x, y, width, height)))
+        //  {
+        //    DrawTextureRec(plainsTexture, tile.TexturePosition, tile.RenderPosition, Color.White);
+        //    drawCount++;
+        //  }
+        //}
+        //DrawRectangleLinesEx(cameraView, 1, Color.Yellow);
+        //DrawRectangleRec(player, Color.Green);
+        //EndMode2D();
+        //EndTextureMode();
 
-	  UnloadTexture(renderTarget.Texture);
-	  UnloadTexture(plainsTexture);
-	  CloseWindow();
-	}
+        //BeginDrawing();
+        //ClearBackground(Color.Black);
+        //var sourceRec = new Rectangle(0f, 0f, (float)renderTarget.Texture.Width, (float)-renderTarget.Texture.Height);
+        //var destinationRec = new Rectangle(
+        //  (screenWidth - ((float)gameScreenWidth * scale)) * 0.5f,
+        //  (screenHeight - ((float)gameScreenHeight * scale)) * 0.5f,
+        //  (float)gameScreenWidth * scale,
+        //  (float)gameScreenHeight * scale);
+
+        //DrawTexturePro(renderTarget.Texture, sourceRec, destinationRec, new Vector2(0, 0), 0f, Color.White);
+        //DrawFPS(15, 10);
+        //DrawText($"Tiles: {drawCount}", 15, 35, 25, Color.Red);
+        //EndDrawing();
+      }
+      Thaloria.Dispose();
+      FontManager.DisposeFonts();
+      //UnloadTexture(renderTarget.Texture);
+      //UnloadTexture(plainsTexture);
+      CloseWindow();
+    }
   }
 }
