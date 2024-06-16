@@ -9,15 +9,15 @@
     "fileStates": {
         "map.tmx": {
             "scale": 1,
-            "selectedLayer": 0,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 414.5,
-                "y": 424.5
+                "x": 521.5,
+                "y": 261.5
             }
         },
         "plains.tsx": {
             "scaleInDock": 2.5,
-            "scaleInEditor": 1
+            "scaleInEditor": 4
         },
         "world.tmx": {
             "scale": 2.068229166666667,

@@ -28,4 +28,9 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="World\Interface\" />
+    <Folder Include="World\Map\" />
+  </ItemGroup>
+
 </Project>
