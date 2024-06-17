@@ -5,7 +5,7 @@ namespace Thaloria.Loaders
 {
   public static class FontManager
   {
-    private readonly static List<Font> Fonts = new List<Font>();
+    private readonly static List<Font> Fonts = [];
     
     public static void LoadFonts() 
     {
