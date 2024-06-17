@@ -6,7 +6,7 @@ namespace Thaloria.World.Scenes
 {
   public sealed class MenuScene : IScene
   {
-    public string Name => nameof(MenuScene);
+    public SceneManagerEnum SceneReference => SceneManagerEnum.MenuScene;
     private SceneManager? _sceneManager;
 
     private int x = 150;
@@ -31,7 +31,7 @@ namespace Thaloria.World.Scenes
     {
       if (IsKeyPressed(KeyboardKey.Enter))
       {
-        _sceneManager?.SwitchToScene(nameof(WorldScene));
+        _sceneManager?.SwitchToScene(SceneManagerEnum.GameScene);
       }
     }
 

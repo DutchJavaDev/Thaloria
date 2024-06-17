@@ -12,18 +12,18 @@ namespace Thaloria.World.Scenes
   /// </summary>
   public sealed class DefaultScene : IScene
   {
-    public string Name => nameof(DefaultScene);
+    public SceneManagerEnum SceneReference => SceneManagerEnum.DefaultScene;
     private SceneManager? _sceneManager;
 
     private const string _loadingText = "...Loading...";
-    private const int _fontSize = 38;
+    private const int _fontSize = 45;
     private const int _spacing = 5;
     private Font _imortalFont;
     private Vector2 _loadTextPosition;
     private Color _loadColor;
     private float _loadColorAlpha = 1f;
     private int _ticks = 0;
-    private int _updateTickRate = 10;
+    private readonly int _updateTickRate = 6;
     private float _direction = -0.2f;
 
     public void Init(SceneManager sceneManager) 
@@ -36,7 +36,7 @@ namespace Thaloria.World.Scenes
       var x = (width / 2) - fontSize.X / 2;
       var y = (height / 2) - fontSize.Y / 2;
       _loadTextPosition = new Vector2(x, y);
-      _loadColor = Color.White;
+      _loadColor = Color.LightGray;
     }
 
     public Task Dispose()
@@ -51,26 +51,34 @@ namespace Thaloria.World.Scenes
 
     public void Update()
     {
+      UpdateAlpha();
+    }
+
+    private void UpdateAlpha()
+    {
       _ticks++;
 
-      if (_ticks == _updateTickRate) 
+      if (_ticks == _updateTickRate)
       {
         _loadColorAlpha += _direction;
 
-        if (_loadColorAlpha < 0.5f)
+        if (_loadColorAlpha < 0.3f)
         {
           _direction = 0.2f;
+          _loadColorAlpha = 0.3f;
         }
 
         if (_loadColorAlpha > 1f)
         {
           _direction = -0.2f;
+          _loadColorAlpha = 1f;
         }
 
         _ticks = 0;
+
+        _loadColor = ColorAlpha(_loadColor, _loadColorAlpha);
       }
 
-      _loadColor = ColorAlpha(_loadColor,_loadColorAlpha);
     }
 
     public void Render()

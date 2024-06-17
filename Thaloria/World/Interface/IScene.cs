@@ -2,7 +2,7 @@
 {
   public interface IScene
   {
-    string Name { get; }
+    SceneManagerEnum SceneReference { get; }
     void Init(SceneManager sceneManager);
     Task Load();
     void Update();

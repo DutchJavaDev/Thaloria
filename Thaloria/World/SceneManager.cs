@@ -3,34 +3,38 @@ using Thaloria.World.Scenes;
 
 namespace Thaloria.World
 {
+  public enum SceneManagerEnum : byte
+  {
+    DefaultScene,
+    MenuScene,
+    GameScene
+  }
 
   public sealed class SceneManager
   {
-    private int Index = 0;
-    private readonly int MaxScenes = 4;
-    private readonly IScene[] Scenes;
+    private readonly IDictionary<SceneManagerEnum, IScene> Scenes;
     private IScene _currentScene;
 
     public SceneManager()
     {
-      Scenes = new IScene[MaxScenes];
-      var def = new DefaultScene();
+      Scenes = new Dictionary<SceneManagerEnum, IScene>();
+      SetDefaultScene();
+    }
 
-      _currentScene = def;
-      AddScene(def);
+    private void SetDefaultScene()
+    {
+      var defaultScene = new DefaultScene();
+      _currentScene = defaultScene;
+      AddScene(defaultScene);
     }
 
     public void AddScene(IScene scene)
     {
-      if (Index > Scenes.Length) 
+      var reference = scene.SceneReference;
+      if (Scenes.TryAdd(reference, scene))
       {
-        throw new IndexOutOfRangeException($"Adding to much scenes, Increase {nameof(MaxScenes)}");
+        scene.Init(this);
       }
-
-      Scenes[Index] = scene;
-      Scenes[Index].Init(this);
-
-      Index++;
     }
 
     public IScene GetScene()
@@ -38,23 +42,26 @@ namespace Thaloria.World
       return _currentScene;
     }
 
-    public async void SwitchToScene(string name)
+    public async void SwitchToScene(SceneManagerEnum scene)
     {
+      // Dispose current scene
       await _currentScene.Dispose().ConfigureAwait(false);
 
-      // Default scene
-      _currentScene = Scenes[0];
+      // Set loading scene
+      _currentScene = Scenes[SceneManagerEnum.DefaultScene];
 
-      var sceneToSwitch = Scenes.Where(i => i.Name == name).First();
+      // Get the scene we are going to switch to and start the loading
+      var sceneToSwitchTo = Scenes[scene];
 
-      await sceneToSwitch.Load().ConfigureAwait(false);
+      await sceneToSwitchTo.Load().ConfigureAwait(false);
 
-      _currentScene = sceneToSwitch;
+      // Done loading, now switch to that scene
+      _currentScene = sceneToSwitchTo;
     }
 
     public void DisposeAll()
     {
-      foreach (var scene in Scenes)
+      foreach (var scene in Scenes.Values)
       {
         scene.Dispose();
       }
