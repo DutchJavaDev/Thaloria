@@ -11,14 +11,13 @@ namespace Thaloria.World
     public ThaloriaGame()
     {
       _sceneManager = new SceneManager();
-      _sceneManager.AddScene(new DefaultScene());
       _sceneManager.AddScene(new MenuScene());
-      _sceneManager.AddScene(new WorldScene());
+      _sceneManager.AddScene(new GameScene());
     }
 
     public void Init()
     {
-      //_sceneManager.SwitchToScene(nameof(MenuScene));
+      _sceneManager.SwitchToScene(SceneManagerEnum.MenuScene);
     }
 
     // Main game loop
