@@ -144,14 +144,7 @@ namespace Thaloria.World.Scenes
 
                 if (CheckCollisionRecs(CameraView, new Rectangle(x, y, width, height)))
                 {
-                    if (tile.TileId == 71)
-                    {
-                        DrawTextureRec(tileTexture, tile.TexturePosition, tile.RenderPosition, Color.SkyBlue);
-                    }
-                    else
-                    {
-                        DrawTextureRec(tileTexture, tile.TexturePosition, tile.RenderPosition, Color.White);
-                    }
+                    DrawTextureRec(tileTexture, tile.TexturePosition, tile.RenderPosition, Color.White);
                     drawCount++;
                 }
             }
@@ -159,7 +152,6 @@ namespace Thaloria.World.Scenes
             DrawRectangleRec(Player, Color.Green);
             EndMode2D();
             EndTextureMode();
-
 
             // Draw texture
             BeginDrawing();
