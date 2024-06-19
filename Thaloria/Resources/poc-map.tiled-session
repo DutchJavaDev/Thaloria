@@ -8,11 +8,11 @@
     ],
     "fileStates": {
         "map.tmx": {
-            "scale": 1,
+            "scale": 1.5,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 521.5,
-                "y": 261.5
+                "x": 383.66666666666663,
+                "y": 238.33333333333337
             }
         },
         "plains.tsx": {
