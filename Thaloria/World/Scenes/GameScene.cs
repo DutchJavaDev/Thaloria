@@ -45,7 +45,7 @@ namespace Thaloria.World.Scenes
         public async Task Load()
         {
             await Map.LoadMap();
-            tileTexture = LoadTexture("Resources\\plains.png");
+            tileTexture = LoadTexture($"Resources\\{Map.ImageName}");
             renderTarget = LoadRenderTexture(gameScreenWidth, gameScreenHeight);
             SetTextureFilter(renderTarget.Texture, TextureFilter.Bilinear);
 

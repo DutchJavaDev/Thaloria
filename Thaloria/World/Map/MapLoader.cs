@@ -16,6 +16,7 @@ namespace Thaloria.World.Map
         private static readonly int[] GroundLayerIdIGnoreds = [0];
         private static readonly int[] TopLayerIdIgnores = [0];
 
+        public string ImageName { get; private set; } 
         public int MapWidth { get; private set; }
         public int MapHeight { get; private set; }
         public int TileWidth { get; private set; }
@@ -48,6 +49,7 @@ namespace Thaloria.World.Map
 
                 TileSetImageWidth = tileSetImage.Imagewidth;
                 TileSetImageHeight = tileSetImage.Imageheight;
+                ImageName = tileSetImage.ImageName;
 
                 LoadTileData();
             }
@@ -257,8 +259,8 @@ namespace Thaloria.World.Map
         //[JsonPropertyName("columns")]
         //public int Columns { get; set; }
 
-        //[JsonPropertyName("image")]
-        //public string Image { get; set; }
+        [JsonPropertyName("image")]
+        public string ImageName { get; set; }
 
         [JsonPropertyName("imageheight")]
         public int Imageheight { get; set; }
