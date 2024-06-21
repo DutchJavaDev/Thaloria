@@ -8,6 +8,9 @@ namespace Thaloria.World.Map
 {
     public sealed class MapLoader(string mapName)
     {
+        private static readonly string GroundLayerName = "ground";
+        private static readonly string TopLayerName = "top";
+        private static readonly string CollisionLayerObjectsName = "";
         private static readonly string MapFileExtension = ".tmj";
         private static readonly string TilesetFileExtension = ".tsj";
         private static readonly Assembly CurrentAssembly = Assembly.GetExecutingAssembly();
@@ -16,15 +19,16 @@ namespace Thaloria.World.Map
         private static readonly int[] GroundLayerIdIGnoreds = [0];
         private static readonly int[] TopLayerIdIgnores = [0];
 
-        public string ImageName { get; private set; } 
+        public string ImageName { get; private set; } = string.Empty; 
         public int MapWidth { get; private set; }
         public int MapHeight { get; private set; }
         public int TileWidth { get; private set; }
         public int TileHeight { get; private set; }
         public int TileSetImageWidth { get; private set; }
         public int TileSetImageHeight { get; private set; }
-        public List<TileData> TileData { get; private set; }
-        private List<Layer> Layers;
+        public List<TileData> TileData { get; private set; } = [];
+        private List<Layer> Layers = [];
+        private List<Tile> TileCollisionData = [];
 
         public async Task LoadMap()
         {
@@ -50,6 +54,7 @@ namespace Thaloria.World.Map
                 TileSetImageWidth = tileSetImage.Imagewidth;
                 TileSetImageHeight = tileSetImage.Imageheight;
                 ImageName = tileSetImage.ImageName;
+                TileCollisionData = tileSetImage.Tiles;
 
                 LoadTileData();
             }
@@ -62,51 +67,62 @@ namespace Thaloria.World.Map
             var tiledMapWidth = MapWidth / TileWidth;
             var tiledMapHeight = MapHeight / TileHeight;
 
-            var groundLayer = Layers.Where(i => i.Name == "ground").First();
-            var topLayer = Layers.Where(i => i.Name == "top").First();
+            var groundLayer = Layers.Where(i => i.Name == GroundLayerName).First();
+            var topLayer = Layers.Where(i => i.Name == TopLayerName).First();
 
             for (int x = 0; x < tiledMapWidth; x++)
             {
                 for (int y = 0; y < tiledMapHeight; y++)
                 {
                     var groundTileId = GetTileId(x, y, groundLayer.Data, groundLayer.Width, groundLayer.Height);
-
                     if (!GroundLayerIdIGnoreds.Contains(groundTileId))
                     {
                         var xposition = x * TileWidth;
                         var yposition = y * TileHeight;
-
-                        var textureVector2 = GetTexturePosition(groundTileId, TileWidth, TileHeight, TileSetImageWidth);
-
-                        var texturePostion = new Rectangle
-                        {
-                            Position = textureVector2,
-                            Width = TileWidth,
-                            Height = TileHeight,
-                        };
-
-                        TileData.Add(new(groundLayer.Id, groundTileId, texturePostion, new(xposition, yposition)));
+                        AddTile(groundLayer.Id, groundTileId, xposition, yposition);
                     }
 
-                    var topTileId = GetTileId(x, y, topLayer.Data, topLayer.Width, topLayer.Height);
 
+                    var topTileId = GetTileId(x, y, topLayer.Data, topLayer.Width, topLayer.Height);
                     if (!TopLayerIdIgnores.Contains(topTileId))
                     {
                         var xposition = x * TileWidth;
                         var yposition = y * TileHeight;
-
-                        var textureVector2 = GetTexturePosition(topTileId, TileWidth, TileHeight, TileSetImageWidth);
-
-                        var texturePostion = new Rectangle
-                        {
-                            Position = textureVector2,
-                            Width = TileWidth,
-                            Height = TileHeight,
-                        };
-
-                        TileData.Add(new(topLayer.Id, topTileId, texturePostion, new(xposition, yposition)));
+                        AddTile(topLayer.Id, topTileId, xposition, yposition);
                     }
                 }
+            }
+        }
+
+        private void AddTile(int layerId,int tileId, int xposition, int yposition)
+        { 
+            var textureVectorPosition = GetTexturePosition(tileId, TileWidth, TileHeight, TileSetImageWidth);
+
+            var texturePostion = new Rectangle
+            {
+                Position = textureVectorPosition,
+                Width = TileWidth,
+                Height = TileHeight,
+            };
+
+            var collisonBodies = TileCollisionData.Where(i => i.TileId == tileId-1).FirstOrDefault()?.CollisionGroup.CollisionObjects;
+            var hasCollisionBodies = collisonBodies?.Count > 0;
+
+            if(hasCollisionBodies)
+            {
+                var bodies = collisonBodies.Select(i => new Rectangle() 
+                {
+                    X = (float)(xposition + i.RelativeX),
+                    Y = (float)(yposition + i.RelativeY),
+                    Width = (float) i.Width,
+                    Height = (float) i.Height
+                }).ToList();
+
+                TileData.Add(new(layerId, tileId, texturePostion, new(xposition, yposition), hasCollisionBodies, bodies));
+            }
+            else
+            {
+                TileData.Add(new(layerId, tileId, texturePostion, new(xposition,yposition)));
             }
         }
 
@@ -156,12 +172,14 @@ namespace Thaloria.World.Map
     }
 
     /// Tiled class data
-    public readonly struct TileData(int layerId, int tileId, Rectangle texturePos, Vector2 renderPos)
+    public readonly struct TileData(int layerId, int tileId, Rectangle texturePos, Vector2 renderPos, bool hasCollisionBodys = false, List<Rectangle> collisionBody = default)
     {
         public readonly short LayerId = (short)layerId;
         public readonly short TileId = (short)tileId;
         public readonly Rectangle TexturePosition = texturePos;
         public readonly Vector2 RenderPosition = renderPos;
+        public readonly bool HasCollisionBodys = hasCollisionBodys;
+        public readonly List<Rectangle> CollisionBodys = collisionBody;
     }
 
     public class TiledExport
@@ -268,6 +286,8 @@ namespace Thaloria.World.Map
         [JsonPropertyName("imagewidth")]
         public int Imagewidth { get; set; }
 
+        [JsonPropertyName("tiles")]
+        public List<Tile> Tiles { get; set; }
         //[JsonPropertyName("margin")]
         //public int Margin { get; set; }
 
@@ -294,5 +314,74 @@ namespace Thaloria.World.Map
 
         //[JsonPropertyName("version")]
         //public string Version { get; set; }
+    }
+
+    public class Tile
+    {
+        [JsonPropertyName("id")]
+        public int TileId { get; set; }
+
+        [JsonPropertyName("objectgroup")]
+        public CollisionGrouop CollisionGroup { get; set; }
+    }
+
+    public class CollisionGrouop
+    {
+        //[JsonPropertyName("draworder")]
+        //public string draworder { get; set; }
+
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
+
+        //[JsonPropertyName("name")]
+        //public string name { get; set; }
+
+        [JsonPropertyName("objects")]
+        public List<CollisionObject> CollisionObjects { get; set; }
+
+        //[JsonPropertyName("opacity")]
+        //public int opacity { get; set; }
+
+        //[JsonPropertyName("type")]
+        //public string type { get; set; }
+
+        //[JsonPropertyName("visible")]
+        //public bool visible { get; set; }
+
+        //[JsonPropertyName("x")]
+        //public int x { get; set; }
+
+        //[JsonPropertyName("y")]
+        //public int y { get; set; }
+    }
+
+    public class CollisionObject
+    {
+        [JsonPropertyName("height")]
+        public double Height { get; set; }
+
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
+
+        //[JsonPropertyName("name")]
+        //public string name { get; set; }
+
+        //[JsonPropertyName("rotation")]
+        //public int rotation { get; set; }
+
+        //[JsonPropertyName("type")]
+        //public string type { get; set; }
+
+        //[JsonPropertyName("visible")]
+        //public bool visible { get; set; }
+
+        [JsonPropertyName("width")]
+        public double Width { get; set; }
+
+        [JsonPropertyName("x")]
+        public double RelativeX { get; set; }
+
+        [JsonPropertyName("y")]
+        public double RelativeY { get; set; }
     }
 }
