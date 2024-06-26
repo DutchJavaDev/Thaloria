@@ -3,16 +3,16 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "map.tmx",
+    "activeFile": "plains.tsx",
     "expandedProjectPaths": [
     ],
     "fileStates": {
         "map.tmx": {
-            "scale": 1,
-            "selectedLayer": 1,
+            "scale": 1.5,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 521.5,
-                "y": 261.5
+                "x": 388.33333333333337,
+                "y": 297.66666666666663
             }
         },
         "plains.tsx": {
@@ -44,8 +44,8 @@
     ],
     "project": "poc-map.tiled-project",
     "recentFiles": [
-        "plains.tsx",
         "map.tmx",
+        "plains.tsx",
         "world.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",

@@ -23,14 +23,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Resources\fonts\IMMORTAL.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\plains.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="World\Interface\" />
-    <Folder Include="World\Map\" />
   </ItemGroup>
 
 </Project>
