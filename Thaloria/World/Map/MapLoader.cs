@@ -116,7 +116,7 @@ namespace Thaloria.World.Map
                     Y = (float)(yposition + i.RelativeY),
                     Width = (float) i.Width,
                     Height = (float) i.Height
-                }).ToList();
+                }).ToArray();
 
                 TileData.Add(new(layerId, tileId, texturePostion, new(xposition, yposition), hasCollisionBodies, bodies));
             }
@@ -172,14 +172,14 @@ namespace Thaloria.World.Map
     }
 
     /// Tiled class data
-    public readonly struct TileData(int layerId, int tileId, Rectangle texturePos, Vector2 renderPos, bool hasCollisionBodys = false, List<Rectangle> collisionBody = default)
+    public readonly struct TileData(int layerId, int tileId, Rectangle texturePos, Vector2 renderPos, bool hasCollisionBodys = false, Rectangle[] collisionBody = default)
     {
         public readonly short LayerId = (short)layerId;
         public readonly short TileId = (short)tileId;
         public readonly Rectangle TexturePosition = texturePos;
         public readonly Vector2 RenderPosition = renderPos;
         public readonly bool HasCollisionBodys = hasCollisionBodys;
-        public readonly List<Rectangle> CollisionBodys = collisionBody;
+        public readonly Rectangle[] CollisionBodys = collisionBody;
     }
 
     public class TiledExport
