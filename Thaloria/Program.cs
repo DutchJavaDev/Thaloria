@@ -10,12 +10,12 @@ namespace Thaloria
         private readonly static ThaloriaGame Thaloria = new();
         static unsafe void Main(string[] args)
         {
-            var windowWidth = 1600;
-            var windowHeight = 900;
+            var windowWidth = 640;
+            var windowHeight = 480;
 
             SetConfigFlags(ConfigFlags.ResizableWindow | ConfigFlags.VSyncHint);
             InitWindow(windowWidth, windowHeight, "Thaloria");
-            SetWindowMinSize(320, 180);
+            SetWindowMinSize(640, 480);
 
             SetTargetFPS(45);
 
