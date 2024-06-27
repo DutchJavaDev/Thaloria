@@ -128,7 +128,9 @@ namespace Thaloria.World.Scenes
     {
       var screenWidth = (float)GetScreenWidth();
       var screenHeight = (float)GetScreenHeight();
-      var scale = MathF.Min(screenWidth / gameScreenWidth, screenHeight / gameScreenHeight);
+
+      var scaleX = screenWidth / gameScreenWidth;
+      var scaleY = screenHeight / gameScreenHeight;
 
       // Draw to texture
       BeginTextureMode(renderTarget);
@@ -165,10 +167,10 @@ namespace Thaloria.World.Scenes
       ClearBackground(Color.Black);
       var sourceRec = new Rectangle(0f, 0f, (float)renderTarget.Texture.Width, (float)-renderTarget.Texture.Height);
       var destinationRec = new Rectangle(
-        (screenWidth - ((float)gameScreenWidth * scale)) * 0.5f,
-        (screenHeight - ((float)gameScreenHeight * scale)) * 0.5f,
-        (float)gameScreenWidth * scale,
-        (float)gameScreenHeight * scale);
+        (screenWidth - ((float)gameScreenWidth * scaleX)) * 0.5f,
+        (screenHeight - ((float)gameScreenHeight * scaleY)) * 0.5f,
+        (float)gameScreenWidth * scaleX,
+        (float)gameScreenHeight * scaleY);
 
       DrawTexturePro(renderTarget.Texture, sourceRec, destinationRec, new Vector2(0, 0), 0f, Color.White);
       DrawFPS(15, 10);
