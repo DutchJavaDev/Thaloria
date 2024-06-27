@@ -157,7 +157,6 @@ namespace Thaloria.World.Scenes
           drawCount++;
         }
       }
-      DrawRectangleLinesEx(CameraView, 1, Color.Yellow);
       DrawRectangleRec(Player, Color.Green);
       EndMode2D();
       EndTextureMode();
@@ -174,7 +173,7 @@ namespace Thaloria.World.Scenes
 
       DrawTexturePro(renderTarget.Texture, sourceRec, destinationRec, new Vector2(0, 0), 0f, Color.White);
       DrawFPS(15, 10);
-      DrawText($"Tiles: {drawCount}", 15, 35, 25, Color.Red);
+      DrawText($"DrawCount: {drawCount}/{Map.TileData.Count}", 15, 35, 25, Color.Red);
       EndDrawing();
     }
   }
