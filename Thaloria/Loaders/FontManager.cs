@@ -9,7 +9,7 @@ namespace Thaloria.Loaders
     
     public static void LoadFonts() 
     {
-      Fonts.Add(LoadFont("Resources/fonts/IMMORTAL.ttf"));
+      Fonts.Add(LoadFont("Resources/Fonts/IMMORTAL.ttf"));
     }
 
     public static Font GetFont(int index)
