@@ -1,7 +1,7 @@
 ﻿using Raylib_cs;
 using Thaloria.Loaders;
 using static Raylib_cs.Raylib;
-using Thaloria.World;
+using Thaloria.Game;
 
 namespace Thaloria
 {
