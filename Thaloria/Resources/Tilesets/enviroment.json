@@ -1,0 +1,196 @@
+{
+    "software": {
+        "name": "rTexPacker v3.0",
+        "url": "https://raylibtech.itch.io/rtexpacker"
+    },
+    "atlas": {
+        "imagePath": "enviroment.png",
+        "width": 256,
+        "height": 256,
+        "spriteCount": 20,
+        "isFont": false,
+        "fontSize": 32
+    },
+    "sprites": [
+        {
+            "nameId": "log_long",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 144, "y": 176 },
+            "sourceSize": { "width": 48, "height": 16 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 2, "y": 2, "width": 45, "height": 13 }
+        },
+        {
+            "nameId": "log_short",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 0, "y": 208 },
+            "sourceSize": { "width": 32, "height": 16 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 2, "y": 2, "width": 29, "height": 13 }
+        },
+        {
+            "nameId": "log_short_flower",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 96, "y": 176 },
+            "sourceSize": { "width": 32, "height": 16 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 2, "y": 1, "width": 29, "height": 15 }
+        },
+        {
+            "nameId": "map_objects",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 32, "y": 144 },
+            "sourceSize": { "width": 144, "height": 32 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 0, "y": 0, "width": 144, "height": 32 }
+        },
+        {
+            "nameId": "tree_flowers",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 208, "y": 0 },
+            "sourceSize": { "width": 48, "height": 64 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 1, "y": 0, "width": 45, "height": 64 }
+        },
+        {
+            "nameId": "tree_flowers_height",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 64, "y": 0 },
+            "sourceSize": { "width": 48, "height": 64 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 2, "y": 3, "width": 43, "height": 61 }
+        },
+        {
+            "nameId": "tree_normal",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 112, "y": 0 },
+            "sourceSize": { "width": 48, "height": 64 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 1, "y": 0, "width": 45, "height": 64 }
+        },
+        {
+            "nameId": "tree_normal_height",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 160, "y": 0 },
+            "sourceSize": { "width": 48, "height": 64 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 3, "y": 3, "width": 43, "height": 61 }
+        },
+        {
+            "nameId": "tree_stomp",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 192, "y": 80 },
+            "sourceSize": { "width": 32, "height": 32 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 2, "y": 10, "width": 26, "height": 18 }
+        },
+        {
+            "nameId": "tree_stomp_short",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 224, "y": 80 },
+            "sourceSize": { "width": 32, "height": 32 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 6, "y": 10, "width": 20, "height": 17 }
+        },
+        {
+            "nameId": "bush",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 0, "y": 144 },
+            "sourceSize": { "width": 32, "height": 32 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 0, "y": 0, "width": 32, "height": 32 }
+        },
+        {
+            "nameId": "bush_height",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 64, "y": 80 },
+            "sourceSize": { "width": 32, "height": 48 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 4, "y": 6, "width": 23, "height": 42 }
+        },
+        {
+            "nameId": "grass",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 128, "y": 176 },
+            "sourceSize": { "width": 16, "height": 16 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 0, "y": 0, "width": 16, "height": 16 }
+        },
+        {
+            "nameId": "water_decorations",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 0, "y": 176 },
+            "sourceSize": { "width": 96, "height": 32 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 1, "y": 5, "width": 94, "height": 25 }
+        },
+        {
+            "nameId": "decor_16x16",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 0, "y": 0 },
+            "sourceSize": { "width": 64, "height": 80 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 0, "y": 0, "width": 64, "height": 78 }
+        },
+        {
+            "nameId": "grass_plain",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 0, "y": 80 },
+            "sourceSize": { "width": 64, "height": 64 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 0, "y": 0, "width": 64, "height": 64 }
+        },
+        {
+            "nameId": "grass_plain_obstacle",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 96, "y": 80 },
+            "sourceSize": { "width": 48, "height": 48 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 1, "y": 2, "width": 47, "height": 46 }
+        },
+        {
+            "nameId": "grass_plain_obstacle_vertical",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 144, "y": 80 },
+            "sourceSize": { "width": 16, "height": 48 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 1, "y": 7, "width": 15, "height": 41 }
+        },
+        {
+            "nameId": "grass_plain_obstacle_horizontal",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 192, "y": 176 },
+            "sourceSize": { "width": 48, "height": 16 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 2, "y": 0, "width": 44, "height": 16 }
+        },
+        {
+            "nameId": "grass_plain_points",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 160, "y": 80 },
+            "sourceSize": { "width": 32, "height": 48 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 0, "y": 0, "width": 32, "height": 48 }
+        }
+    ]
+}
