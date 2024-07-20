@@ -85,7 +85,8 @@ namespace Thaloria.Game.Scenes
       // Rendering systems
       sequentialRenderSystems = new SequentialSystem<float>(
         new GroundRenderingSystem(_world, Map),
-        new TopRenderingSystem(_world, Map)
+        new TopRenderingSystem(_world, Map),
+        new CollisionBodyRenderingSystem(_world, Map)
        );
     }
 
