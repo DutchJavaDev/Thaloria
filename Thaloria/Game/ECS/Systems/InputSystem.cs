@@ -13,29 +13,33 @@ namespace Thaloria.Game.ECS.Systems
 
     protected override void Update(float state, in Entity entity)
     {
-      ref PlayerComponent player = ref entity.Get<PlayerComponent>();
+      ref PositionComponent playerPosition = ref entity.Get<PositionComponent>();
 
       var velocity = _speed * state;
+      var xPosition = playerPosition.X;
+      var yPosition = playerPosition.Y;
 
       if (IsKeyDown(KeyboardKey.A))
       {
-        player.Body.X -= velocity;
+        xPosition -= velocity;
       }
 
       if (IsKeyDown(KeyboardKey.D))
       {
-        player.Body.X += velocity;
+        xPosition += velocity;
       }
 
       if (IsKeyDown(KeyboardKey.W))
       {
-        player.Body.Y -= velocity;
+        yPosition -= velocity;
       }
 
       if (IsKeyDown(KeyboardKey.S))
       {
-        player.Body.Y += velocity;
+        yPosition += velocity;
       }
+
+      playerPosition.Position = new(xPosition,yPosition);
     }
 
   }
