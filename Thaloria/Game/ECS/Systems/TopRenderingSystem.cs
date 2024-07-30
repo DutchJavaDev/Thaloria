@@ -4,46 +4,74 @@ using Raylib_cs;
 using static Raylib_cs.Raylib;
 using Thaloria.Game.ECS.Components;
 using Thaloria.Game.Map;
-using Thaloria.Game.Helpers;
 using System.Numerics;
 
 namespace Thaloria.Game.ECS.Systems
 {
   [With(typeof(PlayerComponent))]
-  public sealed class TopRenderingSystem(World world, MapLoader Map) : AEntitySetSystem<float>(world)
+  public sealed class TopRenderingSystem : AEntitySetSystem<float>
   {
-    private readonly TileData[] Tiles = Map.TileData.Where(i => i.LayerId == 2).ToArray();
-    private bool _playerDrawn = false;
+    private readonly List<YbufferComponent> ybufferComponents = [];
+    private readonly int PlayerYBufferId = 999;
+
+    public TopRenderingSystem(World world, TileData[] topTileData) : base(world)
+    {
+      ybufferComponents = topTileData.Select(i => new YbufferComponent 
+      {
+        Id = i.TileId,
+        IsPlayer = false,
+        HasTexture = true,
+        Position = i.RenderPosition,
+        TexturePosition = i.TexturePosition,
+        YIndex = (int)(i.RenderPosition.Y + i.TexturePosition.Height)
+      }).ToList();
+    }
+
+    protected override void PreUpdate(float state)
+    {
+      ref readonly Entity player = ref Set.GetEntities()[0];
+      ref PositionComponent playerPosition = ref player.Get<PositionComponent>();
+      ref BodyComponent playerBody = ref player.Get<BodyComponent>();
+      ref RenderComponent playerRender = ref player.Get<RenderComponent>();
+
+      var playerYBufferIndex = ybufferComponents.FindIndex(i => i.Id == PlayerYBufferId);
+
+      // Not found need to be added
+      if (playerYBufferIndex == -1)
+      {
+        ybufferComponents.Add(new YbufferComponent
+        {
+          Id = PlayerYBufferId,
+          IsPlayer = true,
+          HasTexture = false, // Turn true when texture added
+          Color = playerRender.RenderColor,
+          Position = playerPosition.Position,
+          TexturePosition = new Rectangle(playerPosition.X,playerPosition.Y,playerBody.Width,playerBody.Height),
+          YIndex = (int)(playerPosition.Y+playerBody.Height),
+        });
+      }
+      else // Update position etc...
+      {
+        var playerYBufferComp = ybufferComponents[playerYBufferIndex];
+
+        playerYBufferComp.Position = playerPosition.Position;
+        playerYBufferComp.YIndex = (int)(playerPosition.Position.Y + playerBody.Height);
+
+        ybufferComponents[playerYBufferIndex] = playerYBufferComp;
+      }
+
+      // Sort based of y position
+      ybufferComponents.Sort((a, b) => a.YIndex.CompareTo(b.YIndex));
+    }
 
     protected override void Update(float state, in Entity entity)
     {
-      _playerDrawn = false;
-      ref PlayerComponent playerComponent = ref entity.Get<PlayerComponent>();
+      // TODO load other textures
       ref Texture2D TileTexture = ref World.Get<Texture2D>();
       ref CameraComponent cameraComponent = ref World.Get<CameraComponent>();
 
-      var items = Tiles.Select(i => new ZbufferItem
-      {
-        hasTexture = true,
-        Position = i.RenderPosition,
-        TexturePosition = i.TexturePosition,
-        YDepthindex = (int)((i.RenderPosition.Y + i.TexturePosition.Height))
-      }).ToList();
-
-      items.Add(new ZbufferItem
-      {
-        hasTexture = false,
-        Color = playerComponent.Color,
-        Position = playerComponent.Body.Position,
-        TexturePosition = playerComponent.Body,
-        YDepthindex = (int)(playerComponent.Body.Position.Y + (playerComponent.Body.Height))
-      });
-
-      items.Sort((a, b) => a.YDepthindex.CompareTo(b.YDepthindex));
-
       BeginMode2D(cameraComponent.Camera2D);
-
-      foreach (var item in items)
+      foreach (var item in ybufferComponents)
       {
         var x = item.Position.X;
         var y = item.Position.Y;
@@ -55,34 +83,29 @@ namespace Thaloria.Game.ECS.Systems
           continue;
         }
 
-        if (item.hasTexture)
+        if (item.HasTexture)
         {
           DrawTextureRec(TileTexture, item.TexturePosition, item.Position, Color.White);
-          var bounds = new Rectangle 
-          {
-            Position = item.Position,
-            Width = item.TexturePosition.Width,
-            Height = item.TexturePosition.Height
-          };
-
-          DrawRectangleLinesEx(bounds,0.5f,Color.Red);
-        }
+        } // TODO when player has texture
         else
         {
-          DrawRectangleRec(item.TexturePosition,item.Color);
+          var position = new Vector2(x,y);
+          var size = new Vector2(width,height);
+          DrawRectangleV(position, size, item.Color);
         }
       }
-
       EndMode2D();
     }
   }
 
-  class ZbufferItem 
+  struct YbufferComponent(int Id, int yIndex, bool isPlayer, bool hasTexture, Color color, Vector2 position, Rectangle texturePosition)
   {
-    public int YDepthindex {  get; set; }
-    public bool hasTexture {  get; set; }
-    public Color Color { get; set; }
-    public Vector2 Position { get; set; }
-    public Rectangle TexturePosition { get; set; }
+    public int Id = Id;
+    public int YIndex = yIndex;
+    public bool IsPlayer = isPlayer;
+    public bool HasTexture = hasTexture;
+    public Color Color = color;
+    public Vector2 Position = position;
+    public Rectangle TexturePosition = texturePosition;
   }
 }
