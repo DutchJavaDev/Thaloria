@@ -11,11 +11,13 @@ namespace Thaloria.Game.ECS.Systems
     protected override void Update(float state, in Entity entity)
     {
       ref PlayerComponent playerComponent = ref entity.Get<PlayerComponent>();
+      ref PositionComponent positionComponet = ref entity.Get<PositionComponent>();
+      
       ref CameraComponent cameraComponent = ref World.Get<CameraComponent>();
 
       // Future me add feature that whatever you click becomes the target?
 
-      cameraComponent.Camera2D.Target = playerComponent.Body.Position;
+      cameraComponent.Camera2D.Target = positionComponet.Position;
 
       // Clamp camera to 0 when going left
       if (cameraComponent.Camera2D.Target.X - cameraComponent.Camera2D.Offset.X / 2 < 0)
