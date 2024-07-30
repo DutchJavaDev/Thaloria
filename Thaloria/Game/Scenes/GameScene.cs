@@ -19,7 +19,7 @@ namespace Thaloria.Game.Scenes
     private readonly int gameScreenHeight = 480;
 
     // ECS
-    private World? _world;
+    private World _world;
     private ISystem<float>? sequentialUpdateSystems;
     private ISystem<float>? sequentialRenderSystems;
 
@@ -27,7 +27,7 @@ namespace Thaloria.Game.Scenes
     private Texture2D TileTexture;
     private RenderTexture2D RenderTexture2D;
 
-    public Task Dispose()
+    public Task DisposeAsync()
     {
       sequentialUpdateSystems.Dispose();
       sequentialRenderSystems.Dispose();
@@ -42,15 +42,15 @@ namespace Thaloria.Game.Scenes
       _sceneManager = sceneManager;
     }
 
-    public async Task Load()
+    public async Task LoadAsync()
     {
       await Map.LoadMap();
 
       TileTexture = LoadTexture($"Resources\\Tilesets\\{Map.ImageName}");
-      SetTextureFilter(TileTexture, TextureFilter.Anisotropic16X);
+      //SetTextureFilter(TileTexture, TextureFilter.Anisotropic16X);
 
       RenderTexture2D = LoadRenderTexture(gameScreenWidth, gameScreenHeight);
-      SetTextureFilter(RenderTexture2D.Texture, TextureFilter.Anisotropic16X);
+      //SetTextureFilter(RenderTexture2D.Texture, TextureFilter.Anisotropic16X);
 
       _world = new World();
 
@@ -61,7 +61,7 @@ namespace Thaloria.Game.Scenes
       _world.SetMaxCapacity<PlayerComponent>(1);
 
       // Temp
-      _world.CreateEntity().Set(new PlayerComponent(new(0,0,10,10)));
+      LoadPlayer();
 
       _world.Set(new CameraComponent(new Camera2D {
         Offset = new()
@@ -79,15 +79,34 @@ namespace Thaloria.Game.Scenes
       // Update systems
       sequentialUpdateSystems = new SequentialSystem<float>(
         new InputSystem(_world),
+        new CollisionSystem(_world, [.. Map.CollisionBodies]),
         new CameraSystem(_world, Map)
        );
 
       // Rendering systems
       sequentialRenderSystems = new SequentialSystem<float>(
-        new GroundRenderingSystem(_world, Map),
-        new TopRenderingSystem(_world, Map),
+        new GroundRenderingSystem(_world, Map.GroundTileData, Map),
+        new TopRenderingSystem(_world, Map.TopTileData),
+
+        // Debugging
         new CollisionBodyRenderingSystem(_world, Map)
        );
+    }
+
+    private void LoadPlayer()
+    {
+      var player = _world.CreateEntity();
+      player.Set(new PlayerComponent());
+      player.Set(new RenderComponent() 
+      {
+        HasTexture= false,
+        RenderColor = Color.White,
+      });
+      player.Set(new PositionComponent() {
+        Position = new(150,150)
+      });
+      player.Set(new BodyComponent(16,16));
+      player.Set(new DynamicBodyComponent());
     }
 
     public void Update()
