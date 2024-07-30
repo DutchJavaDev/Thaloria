@@ -25,7 +25,7 @@ namespace Thaloria.Game.Scenes
             _sceneManager = sceneManager;
         }
 
-        public Task Load()
+        public Task LoadAsync()
         {
             _imortalFont = FontManager.GetFont(0);
             var screenWidth = (float)GetScreenWidth();
@@ -52,7 +52,7 @@ namespace Thaloria.Game.Scenes
             return Task.CompletedTask;
         }
 
-        public Task Dispose()
+        public Task DisposeAsync()
         {
             return Task.CompletedTask;
         }
