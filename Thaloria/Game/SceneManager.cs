@@ -13,7 +13,7 @@ namespace Thaloria.Game
   public sealed class SceneManager
   {
     private readonly IDictionary<SceneManagerEnum, IScene> Scenes;
-    private IScene _currentScene;
+    private IScene? _currentScene;
 
     public SceneManager()
     {
@@ -39,31 +39,37 @@ namespace Thaloria.Game
 
     public IScene GetScene()
     {
+      if (_currentScene == null)
+        throw new ArgumentNullException("No current scene");
+
       return _currentScene;
     }
 
     public async void SwitchToScene(SceneManagerEnum scene)
     {
       // Dispose current scene
-      await _currentScene.Dispose().ConfigureAwait(false);
+      await GetScene().DisposeAsync()
+        .ConfigureAwait(false);
 
       // Set loading scene
       _currentScene = Scenes[SceneManagerEnum.DefaultScene];
 
-      // Get the scene we are going to switch to and start the loading
+      // Get the scene we are going to switch to
       var sceneToSwitchTo = Scenes[scene];
 
-      await sceneToSwitchTo.Load().ConfigureAwait(false);
+      // Start loading the scene to switch to
+      await sceneToSwitchTo.LoadAsync()
+        .ConfigureAwait(false);
 
       // Done loading, now switch to that scene
       _currentScene = sceneToSwitchTo;
     }
 
-    public void DisposeAll()
+    public async Task DisposeAllAsync()
     {
       foreach (var scene in Scenes.Values)
       {
-        scene.Dispose();
+        await scene.DisposeAsync();
       }
     }
   }
