@@ -1,5 +1,4 @@
 ﻿using Raylib_cs;
-using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using System.Text.Json;
@@ -25,10 +24,12 @@ namespace Thaloria.Game.Map
     public int TileSetImageHeight { get; private set; } = 0;
     public List<Rectangle> CollisionBodies { get; private set; } = [];
     public List<TileData> TileData { get; private set; } = [];
-
+    public TileData[] GroundTileData => TileData.Where(i => i.LayerId == 1).ToArray();
+    public TileData[] TopTileData => TileData.Where(i => i.LayerId == 2).ToArray();
+    
     private List<TiledMapLayer> Layers = [];
     private TiledMapTile[] TileCollisionData = [];
-    private CustomTileLoader? CustomTileLoader;
+    private readonly CustomTileLoader CustomTileLoader = new();
 
     public async Task LoadMap()
     {
@@ -59,8 +60,7 @@ namespace Thaloria.Game.Map
         // Load TileAtlas data
         var tileAtlasPath = CreateResourcePath("Tilesets", $"{ImageName.Split('.')[0]}.json");
         var tileAtlas = await DeserilizeResouceFromStream<TileAtlas>(tileAtlasPath);
-        CustomTileLoader = new CustomTileLoader(tileAtlas);
-        CustomTileLoader.LoadAtlasData();
+        CustomTileLoader.LoadAtlasData(tileAtlas);
 
         LoadTileData();
         LoadCollisionObjects();
@@ -74,8 +74,8 @@ namespace Thaloria.Game.Map
       var tiledMapWidth = MapWidth / TileWidth;
       var tiledMapHeight = MapHeight / TileHeight;
 
-      var groundLayer = Layers.FirstOrDefault(i => i.Name == GroundLayerName);
-      var topLayer = Layers.FirstOrDefault(i => i.Name == TopLayerName);
+      var groundLayer = Layers.First(i => i.Name == GroundLayerName);
+      var topLayer = Layers.First(i => i.Name == TopLayerName);
 
       var xposition = 0;
       var yposition = 0;
@@ -115,6 +115,9 @@ namespace Thaloria.Game.Map
 
             var texturePostion = CustomTileLoader.GetRectangle(tileMetaData.TextureName);
 
+            // Find collision bodies and place them at the right location on the texture
+            // Use position of the tile and translate that to the texture somehow?
+
             TileData.Add(new(topLayer.Id, topTileId, texturePostion, new(xposition, yposition)));
           }
           else
@@ -134,7 +137,7 @@ namespace Thaloria.Game.Map
 
     private void LoadCollisionObjects()
     {
-      var collisionLayer = Layers.FirstOrDefault(i => i.Name == CollisionLayerObjectsName);
+      var collisionLayer = Layers.First(i => i.Name == CollisionLayerObjectsName);
 
       foreach (var obj in collisionLayer.Objects)
       {
