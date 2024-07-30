@@ -4,11 +4,11 @@ using System.Text.Json.Serialization;
 
 namespace Thaloria.Game.Map
 {
-  public sealed class CustomTileLoader(TileAtlas tileAtlas)
+  public sealed class CustomTileLoader
   {
     private readonly Dictionary<string, Rectangle> tileLocations = [];
 
-    public void LoadAtlasData()
+    public void LoadAtlasData(TileAtlas tileAtlas)
     {
       foreach (var sprite in tileAtlas.Sprites)
       {
