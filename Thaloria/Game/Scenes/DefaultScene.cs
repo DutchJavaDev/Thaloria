@@ -39,12 +39,12 @@ namespace Thaloria.Game.Scenes
             _loadColor = Color.LightGray;
         }
 
-        public Task Dispose()
+        public Task DisposeAsync()
         {
             return Task.CompletedTask;
         }
 
-        public Task Load()
+        public Task LoadAsync()
         {
             return Task.CompletedTask;
         }
