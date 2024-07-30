@@ -7,10 +7,10 @@ using static Raylib_cs.Raylib;
 
 namespace Thaloria.Game.ECS.Systems
 {
-  public sealed class GroundRenderingSystem(World world, MapLoader Map) : ISystem<float>
+  public sealed class GroundRenderingSystem(World world, TileData[] tiles, MapLoader Map) : ISystem<float>
   {
     public bool IsEnabled { get; set; }
-    private readonly TileData[] Tiles = Map.TileData.Where(i => i.LayerId == 1).ToArray();
+    private readonly TileData[] Tiles = tiles;
 
     public void Dispose()
     {}
