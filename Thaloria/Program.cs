@@ -8,7 +8,7 @@ namespace Thaloria
     static class Program
     {
         private readonly static ThaloriaGame Thaloria = new();
-        static unsafe void Main(string[] args)
+        static async Task Main(string[] args)
         {
             var windowWidth = 1280;
             var windowHeight = 860;
@@ -21,12 +21,14 @@ namespace Thaloria
 
             FontManager.LoadFonts();
             Thaloria.Init();
-
+            
             while (!WindowShouldClose())
             {
                 Thaloria.Run();
             }
-            Thaloria.Dispose();
+
+            await Thaloria.Dispose();
+
             FontManager.DisposeFonts();
             CloseWindow();
         }
