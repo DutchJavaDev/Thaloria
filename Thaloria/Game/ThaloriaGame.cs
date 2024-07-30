@@ -34,9 +34,9 @@ namespace Thaloria.Game
       scene.Render();
     }
 
-    public void Dispose()
+    public async Task Dispose()
     {
-      _sceneManager.DisposeAll();
+      await _sceneManager.DisposeAllAsync();
     }
   }
 }
