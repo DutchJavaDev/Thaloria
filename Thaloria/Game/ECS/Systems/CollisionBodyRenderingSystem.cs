@@ -17,16 +17,24 @@ namespace Thaloria.Game.ECS.Systems
 
     public void Update(float state)
     {
-      ref CameraComponent cameraComponent = ref world.Get<CameraComponent>();
-      BeginMode2D(cameraComponent.Camera2D);
-      foreach (var body in Bodies)
+      if (IsKeyPressed(KeyboardKey.Q))
       {
-        if (CheckCollisionRecs(cameraComponent.CameraView, body))
-        {
-          DrawRectangleLinesEx(body,Thickness,Color);
-        }
+        IsEnabled = !IsEnabled;
       }
-      EndMode2D();
+
+      if (IsEnabled)
+      {
+        ref CameraComponent cameraComponent = ref world.Get<CameraComponent>();
+        BeginMode2D(cameraComponent.Camera2D);
+        foreach (var body in Bodies)
+        {
+          if (CheckCollisionRecs(cameraComponent.CameraView, body))
+          {
+            DrawRectangleLinesEx(body, Thickness, Color);
+          }
+        }
+        EndMode2D();
+      }
     }
 
     public void Dispose()
