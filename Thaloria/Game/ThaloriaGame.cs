@@ -1,9 +1,9 @@
-﻿using Thaloria.World.Scenes;
+﻿using Thaloria.Game.Scenes;
 using Raylib_cs;
 using static Raylib_cs.Raylib;
 using Thaloria.Loaders;
 
-namespace Thaloria.World
+namespace Thaloria.Game
 {
   public sealed class ThaloriaGame
   {
@@ -34,9 +34,9 @@ namespace Thaloria.World
       scene.Render();
     }
 
-    public void Dispose()
+    public async Task Dispose()
     {
-      _sceneManager.DisposeAll();
+      await _sceneManager.DisposeAllAsync();
     }
   }
 }

@@ -1,10 +1,10 @@
-﻿using Thaloria.World.Interface;
+﻿using Thaloria.Game.Interface;
 using Raylib_cs;
 using static Raylib_cs.Raylib;
 using Thaloria.Loaders;
 using System.Numerics;
 
-namespace Thaloria.World.Scenes
+namespace Thaloria.Game.Scenes
 {
     public sealed class MenuScene : IScene
     {
@@ -25,7 +25,7 @@ namespace Thaloria.World.Scenes
             _sceneManager = sceneManager;
         }
 
-        public Task Load()
+        public Task LoadAsync()
         {
             _imortalFont = FontManager.GetFont(0);
             var screenWidth = (float)GetScreenWidth();
@@ -52,7 +52,7 @@ namespace Thaloria.World.Scenes
             return Task.CompletedTask;
         }
 
-        public Task Dispose()
+        public Task DisposeAsync()
         {
             return Task.CompletedTask;
         }

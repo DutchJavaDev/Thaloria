@@ -1,10 +1,10 @@
-﻿using Thaloria.World.Interface;
+﻿using Thaloria.Game.Interface;
 using Raylib_cs;
 using static Raylib_cs.Raylib;
 using System.Numerics;
 using Thaloria.Loaders;
 
-namespace Thaloria.World.Scenes
+namespace Thaloria.Game.Scenes
 {
 
     /// <summary>
@@ -39,12 +39,12 @@ namespace Thaloria.World.Scenes
             _loadColor = Color.LightGray;
         }
 
-        public Task Dispose()
+        public Task DisposeAsync()
         {
             return Task.CompletedTask;
         }
 
-        public Task Load()
+        public Task LoadAsync()
         {
             return Task.CompletedTask;
         }

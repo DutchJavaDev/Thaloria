@@ -9,26 +9,33 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\map.tmj" />
-    <None Remove="Resources\plains.tsj" />
+    <None Remove="Resources\Maps\enviromentTileset.tsj" />
+    <None Remove="Resources\Maps\Home.tmj" />
+    <None Remove="Resources\Tilesets\enviroment.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\map.tmj" />
-    <EmbeddedResource Include="Resources\plains.tsj" />
+    <EmbeddedResource Include="Resources\Maps\enviromentTileset.tsj" />
+    <EmbeddedResource Include="Resources\Maps\Home.tmj" />
+    <EmbeddedResource Include="Resources\Tilesets\enviroment.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Raylib-cs" Version="6.0.0" />
+    <PackageReference Include="DefaultEcs" Version="0.17.2" />
+    <PackageReference Include="Raylib-cs" Version="6.1.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Resources\fonts\IMMORTAL.ttf">
+    <None Update="Resources\Fonts\IMMORTAL.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\plains.png">
+    <None Update="Resources\Tilesets\enviroment.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\Tiled\" />
   </ItemGroup>
 
 </Project>
