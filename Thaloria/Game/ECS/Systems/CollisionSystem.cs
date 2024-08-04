@@ -34,7 +34,7 @@ namespace Thaloria.Game.ECS.Systems
       foreach (var collidingObject in collidingObjects)
       {
         var result = CollisionHelper.ResolveCollision(dynamicRec, collidingObject);
-
+        // TODO fix multiple collision objects make dynamic object move weird/shaking
         if (Math.Abs(result.MoveX) < Math.Abs(result.MoveY))
         {
           var oldX = positionComponent.X;
