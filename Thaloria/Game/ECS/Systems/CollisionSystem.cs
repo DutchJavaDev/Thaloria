@@ -29,23 +29,56 @@ namespace Thaloria.Game.ECS.Systems
       };
 
       // Checking all objects....
-      var collidingObjects = CollisionObjects.Where(i => CheckCollisionRecs(dynamicRec,i));
+      var collidingObjects = CollisionObjects.Where(i => CheckCollisionRecs(dynamicRec,i)).ToList();
 
       foreach (var collidingObject in collidingObjects)
       {
-        var result = CollisionHelper.ResolveCollision(dynamicRec, collidingObject);
-        // TODO fix multiple collision objects make dynamic object move weird/shaking
-        if (Math.Abs(result.MoveX) < Math.Abs(result.MoveY))
+        // Moving right
+        if (positionComponent.XVelocity > 0)
         {
-          var oldX = positionComponent.X;
-          var newX = positionComponent.X + result.MoveX;
-          positionComponent.Position = new Vector2(newX, positionComponent.Y);
+          // check from center
+          if (dynamicRec.X + dynamicRec.Width / 2 < collidingObject.X)
+          {
+            var newX = collidingObject.X - dynamicRec.Width;
+            positionComponent.Position = new(newX, positionComponent.Y);
+            continue;
+          }
         }
-        else
+
+        // Moving left
+        if (positionComponent.XVelocity < 0)
+        { 
+          // check from center
+          if (collidingObject.X + collidingObject.Width / 2 < dynamicRec.X)
+          {
+            var newX = collidingObject.X + collidingObject.Width;
+            positionComponent.Position = new(newX, positionComponent.Y);
+            continue;
+          }
+        }
+
+        // Moving up
+        if (positionComponent.YVelocity < 0)
         {
-          var oldY = positionComponent.Y;
-          var newY = positionComponent.Y + result.MoveY;
-          positionComponent.Position = new Vector2(positionComponent.X, newY);
+          // check from center
+          if(dynamicRec.Y > collidingObject.Y + collidingObject.Height / 2)
+          {
+            var newY = collidingObject.Y + collidingObject.Height;
+            positionComponent.Position = new(positionComponent.X, newY);
+            continue;
+          }
+        }
+
+        // Moving down
+        if (positionComponent.YVelocity > 0) 
+        {
+          // check from center
+          if(dynamicRec.Y + dynamicRec.Height / 2 < collidingObject.Y)
+          {
+            var newY = collidingObject.Y - dynamicRec.Height;
+            positionComponent.Position = new(positionComponent.X, newY);
+            continue;
+          }
         }
       }
     }
