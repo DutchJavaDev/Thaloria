@@ -1,7 +1,9 @@
 ﻿using DefaultEcs;
 using DefaultEcs.System;
 using Thaloria.Game.ECS.Components;
+using Thaloria.Game.Helpers;
 using Thaloria.Game.Map;
+using Thaloria.Game.Physics;
 
 namespace Thaloria.Game.ECS.Systems
 {
@@ -10,14 +12,13 @@ namespace Thaloria.Game.ECS.Systems
   {
     protected override void Update(float state, in Entity entity)
     {
-      ref PlayerComponent playerComponent = ref entity.Get<PlayerComponent>();
-      ref PositionComponent positionComponet = ref entity.Get<PositionComponent>();
-      
       ref CameraComponent cameraComponent = ref World.Get<CameraComponent>();
+
+      var body = PhysicsWorld.Instance.GetBodyByTag(entity.GetHashCode());
 
       // Future me add feature that whatever you click becomes the target?
 
-      cameraComponent.Camera2D.Target = positionComponet.Position;
+      cameraComponent.Camera2D.Target = new System.Numerics.Vector2(body.Position.X,body.Position.Y);
 
       // Clamp camera to 0 when going left
       if (cameraComponent.Camera2D.Target.X - cameraComponent.Camera2D.Offset.X / 2 < 0)
