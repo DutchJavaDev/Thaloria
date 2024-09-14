@@ -32,10 +32,10 @@ namespace Thaloria.Game.Scenes
 
     public Task DisposeAsync()
     {
-      PhysicsWorld.Instance.Dispose();
+      //PhysicsWorld.Instance.Dispose();
       sequentialUpdateSystems?.Dispose();
       sequentialRenderSystems?.Dispose();
-      EcsCreation.Instance.Dispose();
+      //EcsCreation.Instance.Dispose();
       UnloadRenderTexture(RenderTexture2D);
       return Task.CompletedTask;
     }
@@ -77,7 +77,7 @@ namespace Thaloria.Game.Scenes
       sequentialRenderSystems = new SequentialSystem<float>(
         new AnimationSystem(EcsCreation.Instance),
         new TileRenderingSystem(EcsCreation.Instance, Map.GroundTileData, Map),
-        new RenderPipelineSystem(EcsCreation.Instance,Map.TopTileData),
+        new RenderPipelineSystem(EcsCreation.Instance, Map.TopTileData),
         // Debugging
         new CollisionBodyRenderingSystem(EcsCreation.Instance)
        );
