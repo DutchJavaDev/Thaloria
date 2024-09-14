@@ -12,7 +12,7 @@ namespace Thaloria.Game.ECS.Systems
   [With(typeof(PlayerComponent))]
   public sealed class InputSystem() : AEntitySetSystem<float>(EcsCreation.Instance)
   {
-    private readonly float _speed = 100f;
+    private readonly float _speed = 10f;
 
     protected override void Update(float state, in Entity entity)
     {
@@ -22,18 +22,7 @@ namespace Thaloria.Game.ECS.Systems
 
       // Reset to stop moving
       body.LinearVelocity = Vector2.Zero;
-      //animationController.SetAnimation(AnimationTypes.Idle);
-      
-      // DEV
-      //if (IsKeyDown(KeyboardKey.L))
-      //{
-      //  body.FixedRotation = !body.FixedRotation;
-
-      //  if (body.FixedRotation) 
-      //  {
-      //    body.Rotation = 0;
-      //  }
-      //}
+      animationController.SetAnimation(AnimationTypes.Idle);
 
       if (IsKeyDown(KeyboardKey.A))
       {
