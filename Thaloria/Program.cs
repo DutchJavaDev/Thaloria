@@ -1,5 +1,4 @@
 ﻿using Raylib_cs;
-using Thaloria.Loaders;
 using static Raylib_cs.Raylib;
 using Thaloria.Game;
 
@@ -13,9 +12,11 @@ namespace Thaloria
       var windowWidth = 1280;
       var windowHeight = 860;
 
-      SetConfigFlags(ConfigFlags.VSyncHint);
+      //SetConfigFlags(ConfigFlags.VSyncHint);
       InitWindow(windowWidth, windowHeight, "Thaloria");
 
+      SetTargetFPS(60);
+      
       SetWindowMinSize(windowWidth, windowHeight);
 
       Thaloria.Init();
