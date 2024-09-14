@@ -97,7 +97,6 @@ namespace Thaloria.Game.Map
           var tileMetaData = TileCollisionData.FirstOrDefault(i => i.TileId == topTileId-1);
           
           var hasParentId = false;
-          var parentId = 0;
 
           xposition = x * TileWidth;
           yposition = y * TileHeight;
