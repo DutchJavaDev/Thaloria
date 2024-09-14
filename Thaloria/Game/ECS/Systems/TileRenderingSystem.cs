@@ -2,15 +2,18 @@
 using DefaultEcs.System;
 using Raylib_cs;
 using Thaloria.Game.ECS.Components;
+using Thaloria.Game.Helpers;
 using Thaloria.Game.Map;
+using Thaloria.Loaders;
 using static Raylib_cs.Raylib;
 
 namespace Thaloria.Game.ECS.Systems
 {
-  public sealed class GroundRenderingSystem(World world, TileData[] tiles, MapLoader Map) : ISystem<float>
+  public sealed class TileRenderingSystem(World world, TileData[] tiles, MapLoader Map) : ISystem<float>
   {
     public bool IsEnabled { get; set; }
     private readonly TileData[] Tiles = tiles;
+    private readonly Texture2D TileTexture = ResourceManager.GetTexture2DTileset(ResourceNames.TileTexture);
 
     public void Dispose()
     {}
@@ -18,7 +21,6 @@ namespace Thaloria.Game.ECS.Systems
     public void Update(float state)
     {
       ref CameraComponent cameraComponent = ref world.Get<CameraComponent>();
-      ref Texture2D TileTexture = ref world.Get<Texture2D>();
 
       BeginMode2D(cameraComponent.Camera2D);
       for (int i = 0; i < Tiles.Length; i++)

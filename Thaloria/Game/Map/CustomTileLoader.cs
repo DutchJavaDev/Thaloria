@@ -22,6 +22,10 @@ namespace Thaloria.Game.Map
           Width = sprite.SourceSize.Width,
           Height = sprite.SourceSize.Height
         };
+
+        if (tileLocations.ContainsKey(sprite.NameId))
+          continue;
+
         tileLocations.Add(sprite.NameId,location);
       }
     }

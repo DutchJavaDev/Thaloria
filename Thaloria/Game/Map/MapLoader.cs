@@ -3,6 +3,7 @@ using System.Numerics;
 using System.Reflection;
 using System.Text.Json;
 using Thaloria.Game.Map.Tiled;
+using Thaloria.Game.Physics;
 
 namespace Thaloria.Game.Map
 {
@@ -22,7 +23,6 @@ namespace Thaloria.Game.Map
     public int TileHeight { get; private set; } = 0;
     public int TileSetImageWidth { get; private set; } = 0;
     public int TileSetImageHeight { get; private set; } = 0;
-    public List<Rectangle> CollisionBodies { get; private set; } = [];
     public List<TileData> TileData { get; private set; } = [];
     public TileData[] GroundTileData => TileData.Where(i => i.LayerId == 1).ToArray();
     public TileData[] TopTileData => TileData.Where(i => i.LayerId == 2).ToArray();
@@ -97,7 +97,6 @@ namespace Thaloria.Game.Map
           var tileMetaData = TileCollisionData.FirstOrDefault(i => i.TileId == topTileId-1);
           
           var hasParentId = false;
-          var parentId = 0;
 
           xposition = x * TileWidth;
           yposition = y * TileHeight;
@@ -106,7 +105,7 @@ namespace Thaloria.Game.Map
           if (tileMetaData != null && !string.IsNullOrEmpty(tileMetaData.TextureName))
           {
             // Check if it has parent_id, if it does then skip
-            hasParentId = tileMetaData.TryGetIntProperty("parent_id", out parentId);
+            hasParentId = tileMetaData.TryGetIntProperty("parent_id", out _);
             
             if (hasParentId)
             {
@@ -114,9 +113,6 @@ namespace Thaloria.Game.Map
             }
 
             var texturePostion = CustomTileLoader.GetRectangle(tileMetaData.TextureName);
-
-            // Find collision bodies and place them at the right location on the texture
-            // Use position of the tile and translate that to the texture somehow?
 
             TileData.Add(new(topLayer.Id, topTileId, texturePostion, new(xposition, yposition)));
           }
@@ -141,13 +137,12 @@ namespace Thaloria.Game.Map
 
       foreach (var obj in collisionLayer.Objects)
       {
-        CollisionBodies.Add(new Rectangle()
-        {
-          X = (float) obj.X,
-          Y = (float) obj.Y,
-          Width = (float) obj.Width,
-          Height = (float) obj.Height,
-        });
+        var width = (float)obj.Width;
+        var height = (float)obj.Height;
+        var x = (float)obj.X + width / 2;
+        var y = (float)obj.Y + height / 1.5f;
+
+        PhysicsWorld.Instance.CreateStaticBody(x,y,width,height);
       }
     }
 
@@ -167,14 +162,15 @@ namespace Thaloria.Game.Map
 
       if (hasCollisionBodies)
       {
-        var bodies = collisonBodies?.Select(i => new Rectangle()
+        foreach (var obj in collisonBodies)
         {
-          X = (float)(xposition + i.RelativeX),
-          Y = (float)(yposition + i.RelativeY),
-          Width = (float)i.Width,
-          Height = (float)i.Height
-        }).ToArray();
-        CollisionBodies.AddRange(bodies);
+          var width = (float)obj.Width;
+          var height = (float)obj.Height;
+          var x = (float)(xposition + obj.RelativeX) + width / 2;
+          var y = (float)(yposition + obj.RelativeY) + height / 1.5f;
+
+          PhysicsWorld.Instance.CreateStaticBody(x, y, width, height);
+        }
       }
 
       TileData.Add(new(layerId, tileId, texturePostion, new(xposition, yposition)));

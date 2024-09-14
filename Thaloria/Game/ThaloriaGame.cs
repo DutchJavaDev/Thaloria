@@ -2,6 +2,7 @@
 using Raylib_cs;
 using static Raylib_cs.Raylib;
 using Thaloria.Loaders;
+using Thaloria.Game.Helpers;
 
 namespace Thaloria.Game
 {
@@ -37,6 +38,7 @@ namespace Thaloria.Game
     public async Task Dispose()
     {
       await _sceneManager.DisposeAllAsync();
+      ResourceManager.Dispose();
     }
   }
 }

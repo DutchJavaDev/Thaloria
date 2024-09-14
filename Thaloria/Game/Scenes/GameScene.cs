@@ -6,7 +6,12 @@ using static Raylib_cs.Raylib;
 using Raylib_cs;
 using Thaloria.Game.ECS.Systems;
 using Thaloria.Game.ECS.Components;
+using Thaloria.Loaders;
 using System.Numerics;
+using Thaloria.Game.Helpers;
+using Thaloria.Game.Physics;
+using Thaloria.Game.ECS.Class;
+using Thaloria.Game.ECS;
 
 namespace Thaloria.Game.Scenes
 {
@@ -19,20 +24,18 @@ namespace Thaloria.Game.Scenes
     private readonly int gameScreenHeight = 480;
 
     // ECS
-    private World _world;
     private ISystem<float>? sequentialUpdateSystems;
     private ISystem<float>? sequentialRenderSystems;
 
     // Rendering
-    private Texture2D TileTexture;
     private RenderTexture2D RenderTexture2D;
 
     public Task DisposeAsync()
     {
-      sequentialUpdateSystems.Dispose();
-      sequentialRenderSystems.Dispose();
-      _world?.Dispose();
-      UnloadTexture(TileTexture);
+      //PhysicsWorld.Instance.Dispose();
+      sequentialUpdateSystems?.Dispose();
+      sequentialRenderSystems?.Dispose();
+      //EcsCreation.Instance.Dispose();
       UnloadRenderTexture(RenderTexture2D);
       return Task.CompletedTask;
     }
@@ -46,24 +49,14 @@ namespace Thaloria.Game.Scenes
     {
       await Map.LoadMap();
 
-      TileTexture = LoadTexture($"Resources\\Tilesets\\{Map.ImageName}");
-      //SetTextureFilter(TileTexture, TextureFilter.Anisotropic16X);
+      ResourceManager.LoadResourceTexture2DTileset(ResourceNames.PlayerTileset, "player.png");
+      ResourceManager.LoadResourceTexture2DTileset(ResourceNames.TileTexture, Map.ImageName);
 
       RenderTexture2D = LoadRenderTexture(gameScreenWidth, gameScreenHeight);
-      //SetTextureFilter(RenderTexture2D.Texture, TextureFilter.Anisotropic16X);
 
-      _world = new World();
+      EcsCreation.CreatePlayer();
 
-      // Hmmm ?
-      _world.Set(TileTexture);
-
-      _world.SetMaxCapacity<CameraComponent>(1);
-      _world.SetMaxCapacity<PlayerComponent>(1);
-
-      // Temp
-      LoadPlayer();
-
-      _world.Set(new CameraComponent(new Camera2D {
+      EcsCreation.SetWorldComponent(new CameraComponent(new Camera2D {
         Offset = new()
         {
           X = gameScreenWidth / 2,
@@ -73,40 +66,21 @@ namespace Thaloria.Game.Scenes
         Zoom = 2f,
       }));
 
-      
-      // Let the map load in the entities
-
       // Update systems
       sequentialUpdateSystems = new SequentialSystem<float>(
-        new InputSystem(_world),
-        new CollisionSystem(_world, [.. Map.CollisionBodies]),
-        new CameraSystem(_world, Map)
+        new InputSystem(),
+        PhysicsWorld.Instance,
+        new CameraSystem(EcsCreation.Instance, Map)
        );
 
       // Rendering systems
       sequentialRenderSystems = new SequentialSystem<float>(
-        new GroundRenderingSystem(_world, Map.GroundTileData, Map),
-        new TopRenderingSystem(_world, Map.TopTileData),
-
+        new AnimationSystem(EcsCreation.Instance),
+        new TileRenderingSystem(EcsCreation.Instance, Map.GroundTileData, Map),
+        new RenderPipelineSystem(EcsCreation.Instance, Map.TopTileData),
         // Debugging
-        new CollisionBodyRenderingSystem(_world, Map)
+        new CollisionBodyRenderingSystem(EcsCreation.Instance)
        );
-    }
-
-    private void LoadPlayer()
-    {
-      var player = _world.CreateEntity();
-      player.Set(new PlayerComponent());
-      player.Set(new RenderComponent() 
-      {
-        HasTexture= false,
-        RenderColor = Color.White,
-      });
-      player.Set(new PositionComponent() {
-        Position = new(150,150)
-      });
-      player.Set(new BodyComponent(16,16));
-      player.Set(new DynamicBodyComponent());
     }
 
     public void Update()
@@ -115,7 +89,7 @@ namespace Thaloria.Game.Scenes
       {
         sequentialUpdateSystems.IsEnabled = false;
         sequentialRenderSystems.IsEnabled = false;
-        _sceneManager.SwitchToScene(SceneManagerEnum.MenuScene);
+        _sceneManager?.SwitchToScene(SceneManagerEnum.MenuScene);
         return;
       }
       sequentialUpdateSystems?.Update(GetFrameTime());
@@ -138,12 +112,12 @@ namespace Thaloria.Game.Scenes
       // Draw texture
       BeginDrawing();
       ClearBackground(Color.Black);
-      var sourceRec = new Rectangle(0f, 0f, (float)RenderTexture2D.Texture.Width, (float)-RenderTexture2D.Texture.Height);
+      var sourceRec = new Rectangle(0f, 0f, RenderTexture2D.Texture.Width, -RenderTexture2D.Texture.Height);
       var destinationRec = new Rectangle(
-        (screenWidth - ((float)gameScreenWidth * scaleX)) * 0.5f,
-        (screenHeight - ((float)gameScreenHeight * scaleY)) * 0.5f,
-        (float)gameScreenWidth * scaleX,
-        (float)gameScreenHeight * scaleY);
+        (screenWidth - (gameScreenWidth * scaleX)) * 0.5f,
+        (screenHeight - (gameScreenHeight * scaleY)) * 0.5f,
+        gameScreenWidth * scaleX,
+        gameScreenHeight * scaleY);
 
       DrawTexturePro(RenderTexture2D.Texture, sourceRec, destinationRec, Vector2.Zero, 0f, Color.White);
       DrawFPS(15, 10);
