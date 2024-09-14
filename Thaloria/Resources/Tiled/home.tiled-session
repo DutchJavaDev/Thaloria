@@ -3,16 +3,16 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "enviromentTileset.tsx",
+    "activeFile": "Home.tmx",
     "expandedProjectPaths": [
     ],
     "fileStates": {
         "Home.tmx": {
-            "scale": 2,
-            "selectedLayer": 2,
+            "scale": 4,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 174.5,
-                "y": 155.25
+                "x": 251.75,
+                "y": 178.875
             }
         },
         "enviromentTileset.tsx": {
@@ -36,8 +36,8 @@
     "project": "home.tiled-project",
     "property.type": "int",
     "recentFiles": [
-        "Home.tmx",
-        "enviromentTileset.tsx"
+        "enviromentTileset.tsx",
+        "Home.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
