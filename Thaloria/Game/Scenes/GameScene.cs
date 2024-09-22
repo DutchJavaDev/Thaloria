@@ -50,7 +50,7 @@ namespace Thaloria.Game.Scenes
       await Map.LoadMap();
 
       ResourceManager.LoadResourceTexture2DTileset(ResourceNames.PlayerTileset, "player.png");
-      ResourceManager.LoadResourceTexture2DTileset(ResourceNames.TileTexture, Map.ImageName);
+      //ResourceManager.LoadResourceTexture2DTileset(ResourceNames.TileTexture, Map.ImageName);
 
       RenderTexture2D = LoadRenderTexture(gameScreenWidth, gameScreenHeight);
 
