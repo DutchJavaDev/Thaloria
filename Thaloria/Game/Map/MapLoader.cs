@@ -2,8 +2,10 @@
 using System.Numerics;
 using System.Reflection;
 using System.Text.Json;
+using Thaloria.Game.Helpers;
 using Thaloria.Game.Map.Tiled;
 using Thaloria.Game.Physics;
+using Thaloria.Loaders;
 
 namespace Thaloria.Game.Map
 {
@@ -16,7 +18,7 @@ namespace Thaloria.Game.Map
     private static readonly string TilesetFileExtension = ".tsj";
     private static readonly Assembly CurrentAssembly = Assembly.GetExecutingAssembly();
 
-    public string ImageName { get; private set; } = string.Empty;
+    private string ImageName = string.Empty;
     public int MapWidth { get; private set; } = 0;
     public int MapHeight { get; private set; } = 0;
     public int TileWidth { get; private set; } = 0;
@@ -28,8 +30,10 @@ namespace Thaloria.Game.Map
     public TileData[] TopTileData => TileData.Where(i => i.LayerId == 2).ToArray();
     
     private List<TiledMapLayer> Layers = [];
-    private TiledMapTile[] TileCollisionData = [];
+    private TiledMapTile[]? TileCollisionData = [];
     private readonly CustomTileLoader CustomTileLoader = new();
+    private TiledMapTileSet currentMapTileSet;
+    private TiledMap tiledMap;
 
     public async Task LoadMap()
     {
@@ -37,39 +41,57 @@ namespace Thaloria.Game.Map
       {
         var mapResourcePath = CreateResourcePath("Maps",$"{mapName}{MapFileExtension}");
 
-        var tiledExport = await DeserilizeResouceFromStream<TiledMap>(mapResourcePath);
+        tiledMap = await DeserilizeResouceFromStream<TiledMap>(mapResourcePath);
 
-        MapWidth = tiledExport.Width * tiledExport.Tilewidth;
-        MapHeight = tiledExport.Height * tiledExport.Tileheight;
-        TileWidth = tiledExport.Tilewidth;
-        TileHeight = tiledExport.Tileheight;
+        MapWidth = tiledMap.Width * tiledMap.Tilewidth;
+        MapHeight = tiledMap.Height * tiledMap.Tileheight;
+        TileWidth = tiledMap.Tilewidth;
+        TileHeight = tiledMap.Tileheight;
 
-        Layers = tiledExport.Layers;
+        Layers = tiledMap.Layers;
 
         // Using a single tileset
-        var tileSetName = tiledExport.Tilesets[0].Source.Trim().Split(@"../Tiled/")[1].Split('.')[0];
-        var tileSetResourcePath = CreateResourcePath("Maps",$"{tileSetName}{TilesetFileExtension}");
+        //var tileSetName = tiledExport.Tilesets[0].Source.Trim().Split(@"../Tiled/")[1].Split('.')[0];
 
-        var tileSetImage = await DeserilizeResouceFromStream<TiledMapTileSetImage>(tileSetResourcePath);
+        //var tilesetNames = tiledExport.Tilesets.Select(i => i.Source.Trim().Split(@"../Tiled/")[1].Split('.')[0]);
 
-        TileSetImageWidth = tileSetImage.Imagewidth;
-        TileSetImageHeight = tileSetImage.Imageheight;
-        ImageName = tileSetImage.ImageName.Trim().Split(@"../Tilesets/")[1];
-        TileCollisionData = tileSetImage.Tiles;
+        foreach (var tileset in tiledMap.Tilesets)
+        {
+          currentMapTileSet = tileset;
 
-        // Load TileAtlas data
-        var tileAtlasPath = CreateResourcePath("Tilesets", $"{ImageName.Split('.')[0]}.json");
-        var tileAtlas = await DeserilizeResouceFromStream<TileAtlas>(tileAtlasPath);
-        CustomTileLoader.LoadAtlasData(tileAtlas);
+          var tilesetName = tileset.Source.Trim().Split(@"../Tiled/")[1].Split('.')[0];
 
-        LoadTileData();
+          var tileSetResourcePath = CreateResourcePath("Maps", $"{tilesetName}{TilesetFileExtension}");
+
+          var tileSetImage = await DeserilizeResouceFromStream<TiledMapTileSetImage>(tileSetResourcePath);
+
+          TileSetImageWidth = tileSetImage.Imagewidth;
+          TileSetImageHeight = tileSetImage.Imageheight;
+          ImageName = tileSetImage.ImageName.Trim().Split(@"../Tilesets/")[1];
+          TileCollisionData = tileSetImage.Tiles;
+
+          // Load TileAtlas data
+          var tileAtlasPath = CreateResourcePath("Tilesets", $"{ImageName.Split('.')[0]}.json");
+          var tileAtlas = await DeserilizeResouceFromStream<TileAtlas>(tileAtlasPath);
+          CustomTileLoader.LoadAtlasData(tileAtlas);
+
+          LoadTileData();
+
+          ResourceManager.LoadResourceTexture2DTileset(ImageName, ImageName);
+
+          tileset.Loaded = true;
+        }
+
         LoadCollisionObjects();
       }
     }
 
     private void LoadTileData()
     {
-      TileData = [];
+      if (TileData == null)
+      {
+        TileData = []; 
+      }
 
       var tiledMapWidth = MapWidth / TileWidth;
       var tiledMapHeight = MapHeight / TileHeight;
@@ -88,13 +110,42 @@ namespace Thaloria.Game.Map
           var groundTileId = GetTileId(x, y, groundLayer.Data, groundLayer.Width, groundLayer.Height);
           xposition = x * TileWidth;
           yposition = y * TileHeight;
-          AddTile(groundLayer.Id, groundTileId, xposition, yposition);
+
+          var nextTilemap = tiledMap.Tilesets.Where(i => !i.Source.Equals(currentMapTileSet.Source) && !i.Loaded).FirstOrDefault();
+
+          if (nextTilemap != null)
+          {
+            if (groundTileId >= nextTilemap.Firstgid)
+              continue;
+          }
+          else
+          {
+            if(groundTileId < currentMapTileSet.Firstgid)
+              continue;
+          }
+
+          if(groundTileId != 0)
+            AddTile(groundLayer.Id, groundTileId, xposition, yposition);
 
           // Top layer
           var topTileId = GetTileId(x, y, topLayer.Data, topLayer.Width, topLayer.Height);
-          
+
+          if (topTileId == 0)
+            continue;
+
+          if (nextTilemap != null)
+          {
+            if (topTileId >= nextTilemap.Firstgid)
+              continue;
+          }
+          else
+          {
+            if (groundTileId < currentMapTileSet.Firstgid)
+              continue;
+          }
+
           // Need to subtract one because the exported index are off lol
-          var tileMetaData = TileCollisionData.FirstOrDefault(i => i.TileId == topTileId-1);
+          var tileMetaData = TileCollisionData?.FirstOrDefault(i => i.TileId == topTileId-1);
           
           var hasParentId = false;
 
@@ -114,7 +165,7 @@ namespace Thaloria.Game.Map
 
             var texturePostion = CustomTileLoader.GetRectangle(tileMetaData.TextureName);
 
-            TileData.Add(new(topLayer.Id, topTileId, texturePostion, new(xposition, yposition)));
+            TileData.Add(new(topLayer.Id, topTileId, texturePostion, new(xposition, yposition), ImageName));
           }
           else
           {
@@ -157,7 +208,7 @@ namespace Thaloria.Game.Map
         Height = TileHeight,
       };
 
-      var collisonBodies = TileCollisionData.Where(i => i.TileId == tileId-1).FirstOrDefault()?.CollisionGroup?.CollisionObjects;
+      var collisonBodies = TileCollisionData?.Where(i => i.TileId == tileId-1).FirstOrDefault()?.CollisionGroup?.CollisionObjects;
       var hasCollisionBodies = collisonBodies?.Length > 0;
 
       if (hasCollisionBodies)
@@ -173,7 +224,7 @@ namespace Thaloria.Game.Map
         }
       }
 
-      TileData.Add(new(layerId, tileId, texturePostion, new(xposition, yposition)));
+      TileData.Add(new(layerId, tileId, texturePostion, new(xposition, yposition),ImageName));
     }
 
     private static int GetTileId(int x, int y, List<int> data, int Width, int Height)
@@ -222,11 +273,12 @@ namespace Thaloria.Game.Map
   }
 
   /// Tiled class data
-  public readonly struct TileData(int layerId, int tileId, Rectangle texturePos, Vector2 renderPos)
+  public readonly struct TileData(int layerId, int tileId, Rectangle texturePos, Vector2 renderPos, string textureName)
   {
     public readonly short LayerId = (short)layerId;
     public readonly short TileId = (short)tileId;
     public readonly Rectangle TexturePosition = texturePos;
     public readonly Vector2 RenderPosition = renderPos;
+    public readonly string TextureName = textureName;
   }
 }
