@@ -28,7 +28,7 @@ namespace Thaloria.Game.ECS.Systems
         Position = i.RenderPosition,
         TexturePosition = i.TexturePosition,
         YIndex = (int)(i.RenderPosition.Y + i.TexturePosition.Height),
-        TextureName = ResourceNames.TileTexture,
+        TextureName = i.TextureName,
         isStatic = true,
       }).ToList();
 
