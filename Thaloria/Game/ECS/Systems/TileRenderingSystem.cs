@@ -13,7 +13,6 @@ namespace Thaloria.Game.ECS.Systems
   {
     public bool IsEnabled { get; set; }
     private readonly TileData[] Tiles = tiles;
-    private readonly Texture2D TileTexture = ResourceManager.GetTexture2DTileset(ResourceNames.TileTexture);
 
     public void Dispose()
     {}
@@ -32,7 +31,7 @@ namespace Thaloria.Game.ECS.Systems
 
         if (CheckCollisionRecs(cameraComponent.CameraView, new Rectangle(x, y, Map.TileWidth, Map.TileHeight)))
         {
-          DrawTextureRec(TileTexture, tile.TexturePosition, tile.RenderPosition, Color.White);
+          DrawTextureRec(ResourceManager.GetTexture2DTileset(tile.TextureName), tile.TexturePosition, tile.RenderPosition, Color.White);
         }
       }
       EndMode2D();
