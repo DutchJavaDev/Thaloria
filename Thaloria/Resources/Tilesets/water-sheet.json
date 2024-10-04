@@ -3,14 +3,15 @@
         "name": "rTexPacker v3.0",
         "url": "https://raylibtech.itch.io/rtexpacker"
     },
-    "atlas": {
-        "imagePath": "water-sheet.png",
-        "width": 256,
-        "height": 256,
-        "spriteCount": 6,
-        "isFont": false,
-        "fontSize": 32
-    },
+  "atlas": {
+    "imagePath": "water-sheet.png",
+    "width": 256,
+    "height": 256,
+    "spriteCount": 6,
+    "isFont": false,
+    "fontSize": 32
+  },
+
     "sprites": [
         {
             "nameId": "water1",

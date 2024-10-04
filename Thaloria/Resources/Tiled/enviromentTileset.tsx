@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.11.0" name="enviromentTileset" tilewidth="16" tileheight="16" tilecount="1024" columns="16">
+<tileset version="1.10" tiledversion="1.11.0" name="enviromentTileset" tilewidth="16" tileheight="16" tilecount="256" columns="16">
  <editorsettings>
   <export target="../Maps/enviromentTileset.tsj" format="json"/>
  </editorsettings>
