@@ -1,4 +1,5 @@
 ﻿using Raylib_cs;
+using static Raylib_cs.Raylib;
 using System.Numerics;
 using System.Reflection;
 using System.Text.Json;
@@ -88,10 +89,7 @@ namespace Thaloria.Game.Map
 
     private void LoadTileData()
     {
-      if (TileData == null)
-      {
-        TileData = []; 
-      }
+      TileData ??= [];
 
       var tiledMapWidth = MapWidth / TileWidth;
       var tiledMapHeight = MapHeight / TileHeight;
@@ -124,8 +122,40 @@ namespace Thaloria.Game.Map
               continue;
           }
 
-          if(groundTileId != 0)
+          if (groundTileId != 0)
+          {
+            // water sheet
+            if (groundTileId >= currentMapTileSet.Firstgid)
+            {
+              var groundTileMetaData = TileCollisionData?.FirstOrDefault(i => i.TileId == (groundTileId) - currentMapTileSet.Firstgid);
+
+              if (groundTileMetaData != null)
+              {
+                if (groundTileMetaData.HasAnimation)
+                {
+                  var ids = groundTileMetaData?.Animations?.Select(i => i.TileId).ToArray();
+                  var frames = new List<Rectangle>();
+                  for (int i = 0; i < ids?.Length; i++)
+                  {
+                    var id = ids[i];
+
+                    var frameTexturePosition = GetTexturePosition(id + 1, TileWidth, TileHeight, TileSetImageWidth);
+                    frames.Add(new()
+                    {
+                      Position = frameTexturePosition,
+                      Width = TileWidth,
+                      Height = TileHeight,
+                    });
+                  }
+                  TileData.Add(new(groundLayer.Id, groundTileId, new(), new(xposition, yposition), ImageName, true, [.. frames]));
+                  // Add animated tile
+                  continue;
+                }
+              }
+            }
+
             AddTile(groundLayer.Id, groundTileId, xposition, yposition);
+          }
 
           // Top layer
           var topTileId = GetTileId(x, y, topLayer.Data, topLayer.Width, topLayer.Height);
@@ -145,25 +175,25 @@ namespace Thaloria.Game.Map
           }
 
           // Need to subtract one because the exported index are off lol
-          var tileMetaData = TileCollisionData?.FirstOrDefault(i => i.TileId == topTileId-1);
-          
+          var topTileMetaData = TileCollisionData?.FirstOrDefault(i => i.TileId == topTileId-1);
+
           var hasParentId = false;
 
           xposition = x * TileWidth;
           yposition = y * TileHeight;
 
           // Get texture location
-          if (tileMetaData != null && !string.IsNullOrEmpty(tileMetaData.TextureName))
+          if (topTileMetaData != null && !string.IsNullOrEmpty(topTileMetaData.TextureName))
           {
             // Check if it has parent_id, if it does then skip
-            hasParentId = tileMetaData.TryGetIntProperty("parent_id", out _);
+            hasParentId = topTileMetaData.TryGetIntProperty("parent_id", out _);
             
             if (hasParentId)
             {
               continue;
             }
 
-            var texturePostion = CustomTileLoader.GetRectangle(tileMetaData.TextureName);
+            var texturePostion = CustomTileLoader.GetRectangle(topTileMetaData.TextureName);
 
             TileData.Add(new(topLayer.Id, topTileId, texturePostion, new(xposition, yposition), ImageName));
           }
@@ -171,10 +201,10 @@ namespace Thaloria.Game.Map
           {
             // Check if it has parent_id, if it does then skip
             // Hate this double check...
-            if (topTileId == 0 || tileMetaData != null && tileMetaData.TryGetIntProperty("parent_id", out _))
+            if (topTileId == 0 || topTileMetaData != null && topTileMetaData.TryGetIntProperty("parent_id", out _))
             {
               continue;
-            }
+            } // This still needed?
 
             AddTile(topLayer.Id, topTileId, xposition, yposition);
           }
@@ -236,10 +266,10 @@ namespace Thaloria.Game.Map
       return data[index];
     }
 
-    private static Vector2 GetTexturePosition(int tileId, int mapWidth, int mapHeight, int textureWidth)
+    private static Vector2 GetTexturePosition(int tileId, int tileWidth, int tileHeight, int textureWidth)
     {
       // Calculate the number of columns in the texture
-      int cols = textureWidth / mapWidth;
+      int cols = textureWidth / tileWidth;
 
       // start at 0 not 1
       // zero based index?, need to find out why I actually need this
@@ -251,8 +281,8 @@ namespace Thaloria.Game.Map
       int row = tileId / cols;
 
       // Calculate the x and y coordinates
-      int x = col * mapWidth;
-      int y = row * mapHeight;
+      int x = col * tileWidth;
+      int y = row * tileHeight;
 
       return new(x, y);
     }
@@ -273,12 +303,17 @@ namespace Thaloria.Game.Map
   }
 
   /// Tiled class data
-  public readonly struct TileData(int layerId, int tileId, Rectangle texturePos, Vector2 renderPos, string textureName)
+  public readonly struct TileData(int layerId, int tileId, Rectangle texturePos, 
+    Vector2 renderPos, string textureName, bool 
+    hasAnimation = false, Rectangle[] renderFrames = default)
   {
+    public readonly Guid guid = Guid.NewGuid();
     public readonly short LayerId = (short)layerId;
     public readonly short TileId = (short)tileId;
     public readonly Rectangle TexturePosition = texturePos;
     public readonly Vector2 RenderPosition = renderPos;
     public readonly string TextureName = textureName;
+    public readonly bool HasAnimation = hasAnimation;
+    public readonly Rectangle[] RenderFrames = renderFrames;
   }
 }
