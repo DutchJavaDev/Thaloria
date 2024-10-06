@@ -1054,32 +1054,6 @@
                 }]
         }, 
         {
-         "id":193,
-         "objectgroup":
-            {
-             "draworder":"index",
-             "id":2,
-             "name":"",
-             "objects":[
-                    {
-                     "height":16,
-                     "id":1,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":15.8696,
-                     "x":0.130435,
-                     "y":0.0434783
-                    }],
-             "opacity":1,
-             "type":"objectgroup",
-             "visible":true,
-             "x":0,
-             "y":0
-            }
-        }, 
-        {
          "id":208,
          "type":"log_short"
         }, 

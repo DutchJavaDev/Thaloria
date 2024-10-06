@@ -28,7 +28,13 @@ namespace Thaloria.Game.Map.Tiled
     [JsonPropertyName("x")]
     public double X { get; set; }
 
+    [JsonIgnore]
+    public float Xf => (float)X;
+
     [JsonPropertyName("y")]
     public double Y { get; set; }
+
+    [JsonIgnore]
+    public float Yf => (float)Y;
   }
 }

@@ -445,11 +445,6 @@
    <property name="parent_id" type="int" value="188"/>
   </properties>
  </tile>
- <tile id="193">
-  <objectgroup draworder="index" id="2">
-   <object id="1" x="0.130435" y="0.0434783" width="15.8696" height="16"/>
-  </objectgroup>
- </tile>
  <tile id="208" type="log_short"/>
  <tile id="209">
   <properties>

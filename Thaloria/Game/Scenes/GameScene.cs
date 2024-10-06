@@ -1,6 +1,5 @@
 ﻿using Thaloria.Game.Interface;
 using Thaloria.Game.Map;
-using DefaultEcs;
 using DefaultEcs.System;
 using static Raylib_cs.Raylib;
 using Raylib_cs;
@@ -24,8 +23,8 @@ namespace Thaloria.Game.Scenes
     private readonly int gameScreenHeight = 480;
 
     // ECS
-    private ISystem<float>? sequentialUpdateSystems;
-    private ISystem<float>? sequentialRenderSystems;
+    private SequentialSystem<float>? sequentialUpdateSystems;
+    private SequentialSystem<float>? sequentialRenderSystems;
 
     // Rendering
     private RenderTexture2D RenderTexture2D;
@@ -50,11 +49,12 @@ namespace Thaloria.Game.Scenes
       await Map.LoadMap();
 
       ResourceManager.LoadResourceTexture2DTileset(ResourceNames.PlayerTileset, "player.png");
-      //ResourceManager.LoadResourceTexture2DTileset(ResourceNames.TileTexture, Map.ImageName);
 
       RenderTexture2D = LoadRenderTexture(gameScreenWidth, gameScreenHeight);
 
-      EcsCreation.CreatePlayer();
+      var playerSpawn = Map.GetTileCollisionObjectByName("player_spawn");
+
+      EcsCreation.CreatePlayer(playerSpawn.Xf, playerSpawn.Yf);
 
       EcsCreation.SetWorldComponent(new CameraComponent(new Camera2D {
         Offset = new()

@@ -8,17 +8,17 @@
     ],
     "fileStates": {
         "Home.tmx": {
-            "scale": 11,
-            "selectedLayer": 0,
+            "scale": 2,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 333.54545454545456,
-                "y": 44.5
+                "x": 362,
+                "y": 149.75
             }
         },
         "enviromentTileset.tsx": {
             "dynamicWrapping": false,
-            "scaleInDock": 1.5,
-            "scaleInEditor": 2
+            "scaleInDock": 3,
+            "scaleInEditor": 4
         },
         "water-sheet.tsx": {
             "dynamicWrapping": false,
@@ -43,9 +43,9 @@
     "project": "home.tiled-project",
     "property.type": "string",
     "recentFiles": [
-        "water-sheet.tsx",
         "Home.tmx",
-        "enviromentTileset.tsx"
+        "enviromentTileset.tsx",
+        "water-sheet.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

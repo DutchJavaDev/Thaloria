@@ -24,7 +24,7 @@ namespace Thaloria.Game.ECS
       _world.Set(component);
     }
 
-    public static void CreatePlayer()
+    public static void CreatePlayer(float x, float y)
     {
       var player = _world.CreateEntity();
 
@@ -38,7 +38,7 @@ namespace Thaloria.Game.ECS
       });
 
       // Create a more efficient way if centering the body on the sprite
-      PhysicsWorld.Instance.CreateDynamicBody(150, 150, 12, 16, player.GetHashCode());
+      PhysicsWorld.Instance.CreateDynamicBody(x, y, 12, 16, player.GetHashCode());
 
       // Base animations
       var animations = new Animation[]

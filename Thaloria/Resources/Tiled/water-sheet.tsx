@@ -5,6 +5,10 @@
  </editorsettings>
  <image source="../Tilesets/water-sheet.png" width="256" height="256"/>
  <tile id="0">
+  <objectgroup draworder="index" id="2">
+   <object id="2" x="7" y="7" width="9" height="2"/>
+   <object id="3" x="5" y="9.00026" width="2" height="6.99974"/>
+  </objectgroup>
   <animation>
    <frame tileid="0" duration="100"/>
    <frame tileid="3" duration="100"/>
@@ -15,6 +19,9 @@
   </animation>
  </tile>
  <tile id="1">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="7" width="16" height="2"/>
+  </objectgroup>
   <animation>
    <frame tileid="1" duration="100"/>
    <frame tileid="4" duration="100"/>
