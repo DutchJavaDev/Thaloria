@@ -9,10 +9,10 @@
     "fileStates": {
         "Home.tmx": {
             "scale": 2,
-            "selectedLayer": 3,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 362,
-                "y": 149.75
+                "x": 256.5,
+                "y": 168.75
             }
         },
         "enviromentTileset.tsx": {
@@ -23,7 +23,7 @@
         "water-sheet.tsx": {
             "dynamicWrapping": false,
             "scaleInDock": 1,
-            "scaleInEditor": 5.5
+            "scaleInEditor": 4
         }
     },
     "last.exportedFilePath": "D:/Users/BMulder/source projects/Thaloria/Thaloria/Resources/Maps",
