@@ -39,8 +39,16 @@ namespace Thaloria.Game.Map
     {
       var @object = Layers.Find(i => i.Name == ObjectsLayerName);
 
-      return @object.Objects.Find(i => i.Name == name);
+      return @object.Objects.Find(i => i.Name.Equals(name));
     }
+
+    public IEnumerable<TiledCollisionObject> GetObjectsByBame(string name)
+    {
+      var @object = Layers.Find(i => i.Name == ObjectsLayerName);
+
+      return @object.Objects.Where(i => i.Name.Equals(name));
+    }
+
     public async Task LoadMap()
     {
       if (Layers is null || Layers.Count == 0)
@@ -109,7 +117,7 @@ namespace Thaloria.Game.Map
       {
         for (int y = 0; y < tiledMapHeight; y++)
         {
-          var nextTilemap = tiledMap.Tilesets.Where(i => !i.Source.Equals(currentMapTileSet.Source) && !i.Loaded).FirstOrDefault();
+          var nextTilemap = tiledMap?.Tilesets?.Where(i => !i.Source.Equals(currentMapTileSet?.Source) && !i.Loaded).FirstOrDefault();
 
           // Ground layer
           LoadGroundLayer(x,y,groundLayer,nextTilemap);
@@ -119,7 +127,7 @@ namespace Thaloria.Game.Map
         }
       }
     }
-    private void LoadGroundLayer(int x, int y, TiledMapLayer groundLayer, TiledMapTileSet nextTilemap) 
+    private void LoadGroundLayer(int x, int y, TiledMapLayer groundLayer, TiledMapTileSet? nextTilemap) 
     {
       // Ground layer
       var groundTileId = GetTileId(x, y, groundLayer.Data, groundLayer.Width, groundLayer.Height);
@@ -135,7 +143,7 @@ namespace Thaloria.Game.Map
       }
       else
       {
-        if (groundTileId < currentMapTileSet.Firstgid)
+        if (groundTileId < currentMapTileSet?.Firstgid)
         {
           return;
         }
@@ -144,7 +152,7 @@ namespace Thaloria.Game.Map
       if (groundTileId != 0)
       {
         // water sheet / ground layer animated tiles
-        if (groundTileId >= currentMapTileSet.Firstgid)
+        if (groundTileId >= currentMapTileSet?.Firstgid)
         {
           var groundTileMetaData = TileCollisionData?.FirstOrDefault(i => i.TileId == (groundTileId) - currentMapTileSet.Firstgid);
 
@@ -171,7 +179,6 @@ namespace Thaloria.Game.Map
               AddCollisionBodies((groundTileId - currentMapTileSet.Firstgid)+1, xposition, yposition);
 
               TileData.Add(new(groundLayer.Id, groundTileId, new(), new(xposition, yposition), ImageName, true, [.. frames]));
-              // Add animated tile
               return;
             }
           }
@@ -181,7 +188,7 @@ namespace Thaloria.Game.Map
       }
 
     }
-    private void LoadTopLayer(int x, int y, TiledMapLayer topLayer, TiledMapTileSet nextTilemap) 
+    private void LoadTopLayer(int x, int y, TiledMapLayer topLayer, TiledMapTileSet? nextTilemap) 
     {
       var topTileId = GetTileId(x, y, topLayer.Data, topLayer.Width, topLayer.Height);
 
@@ -195,7 +202,7 @@ namespace Thaloria.Game.Map
       }
       else
       {
-        if (topTileId < currentMapTileSet.Firstgid)
+        if (topTileId < currentMapTileSet?.Firstgid)
         {
           return;
         }

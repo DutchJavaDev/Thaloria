@@ -56,6 +56,10 @@ namespace Thaloria.Game.Scenes
 
       EcsCreation.CreatePlayer(playerSpawn.Xf, playerSpawn.Yf);
 
+      var npcs = Map.GetObjectsByBame("npc_spawn");
+
+      EcsCreation.SpawnNpcs(npcs);
+
       EcsCreation.SetWorldComponent(new CameraComponent(new Camera2D {
         Offset = new()
         {

@@ -28,13 +28,13 @@ namespace Thaloria.Game.Physics
       body.Tag = tag;
     }
 
-    public void CreateStaticBody(float x, float y, float width, float height)
+    public void CreateStaticBody(float x, float y, float width, float height, int tag = -1)
     {
       var body = World.CreateRectangle(width, height, 1f, new Vector2(x, y),0);
-      body.Tag = -1;
+      body.Tag = tag;
     }
 
-    public Body GetBodyByTag(int tag)
+    public Body? GetBodyByTag(int tag)
     {
       return World.BodyList.First(i => i.Tag.Equals(tag));
     }

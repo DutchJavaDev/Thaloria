@@ -3,7 +3,6 @@ using Raylib_cs;
 using System.Numerics;
 using Thaloria.Game.Abstract;
 using Thaloria.Game.ECS.Components;
-using Thaloria.Game.Helpers;
 using Thaloria.Game.Map;
 using Thaloria.Game.Physics;
 using Thaloria.Loaders;
@@ -22,7 +21,8 @@ namespace Thaloria.Game.ECS.Systems
       _world = world;
       yIndexItems = tileData.Select(i => new YIndexItem 
       {
-        Id = i.TileId,
+        // If i ever need the tile id for some reason then I have to fix this...
+        Id = i.TileId * i.TileId, // :)
         isPlayer = false,
         hasTexture = true,
         Position = i.RenderPosition,
@@ -32,6 +32,7 @@ namespace Thaloria.Game.ECS.Systems
         isStatic = true,
       }).ToList();
 
+      // TODO needs testing
       _entitySet = _world.GetEntities()
                            .WithEither<RenderComponent>()
                            .Or<AnimationComponent>().AsSet();
@@ -47,6 +48,7 @@ namespace Thaloria.Game.ECS.Systems
     // Update when either a RenderComponent has been added or removed
     private void UpdateEntitySet<T>(in Entity entity, in T component)
     {
+      // TODO needs testing
       _entitySet = _world.GetEntities()
                      .WithEither<RenderComponent>()
                      .Or<AnimationComponent>().AsSet();
@@ -64,7 +66,6 @@ namespace Thaloria.Game.ECS.Systems
         var hasAnimationComponent = entity.Has<AnimationComponent>();
         var hasPlayerComponent = entity.Has<PlayerComponent>();
 
-        var yIndexId = yIndexItems.FindIndex(i => i.Id == id);
 
         ref RenderComponent renderComponent = ref entity.Get<RenderComponent>();
 
@@ -87,6 +88,8 @@ namespace Thaloria.Game.ECS.Systems
           frameY = frame.Y;
           flipTexture = animationComponent.IsFlipped();
         }
+        
+        var yIndexId = yIndexItems.FindIndex(i => i.Id == id);
 
         if (yIndexId == -1) 
         {

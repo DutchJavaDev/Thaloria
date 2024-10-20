@@ -13,4 +13,12 @@
     Jumping_Left,
     Death
   }
+
+  public enum ThaloriaNpc : byte
+  {
+    None,
+    Skeleton,
+    SkeletonSword,
+    Slime
+  }
 }

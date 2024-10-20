@@ -26,6 +26,7 @@
             "scaleInEditor": 4
         }
     },
+    "frame.defaultDuration": 100,
     "last.exportedFilePath": "D:/Users/BMulder/source projects/Thaloria/Thaloria/Resources/Maps",
     "last.imagePath": "D:/Users/BMulder/source projects/Thaloria/Thaloria/Resources/Tilesets",
     "lastUsedTilesetExportFilter": "JSON tileset files (*.tsj *.json)",
@@ -41,7 +42,7 @@
         "water-sheet.tsx"
     ],
     "project": "home.tiled-project",
-    "property.type": "string",
+    "property.type": "int",
     "recentFiles": [
         "Home.tmx",
         "enviromentTileset.tsx",
