@@ -1,0 +1,448 @@
+{
+    "software": {
+        "name": "rTexPacker v4.0",
+        "url": "https://raylibtech.itch.io/rtexpacker"
+    },
+    "atlas": {
+        "imagePath": "gameAtlasTrimmed.png",
+        "width": 1024,
+        "height": 1024,
+        "spriteCount": 48,
+        "isFont": false,
+        "fontSize": 32
+    },
+    "sprites": [
+        {
+            "nameId": "decor_16x16",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 813, "y": 192 },
+            "sourceSize": { "width": 64, "height": 80 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 0, "y": 0, "width": 64, "height": 78 }
+        },
+        {
+            "nameId": "fences",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 954, "y": 278 },
+            "sourceSize": { "width": 64, "height": 64 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 2, "y": 1, "width": 61, "height": 63 }
+        },
+        {
+            "nameId": "grass",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 94, "y": 595 },
+            "sourceSize": { "width": 16, "height": 16 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 0, "y": 0, "width": 16, "height": 16 }
+        },
+        {
+            "nameId": "grass_plain",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 909, "y": 214 },
+            "sourceSize": { "width": 64, "height": 64 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 0, "y": 0, "width": 64, "height": 64 }
+        },
+        {
+            "nameId": "grass_plain_obstacle",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 813, "y": 488 },
+            "sourceSize": { "width": 48, "height": 48 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 1, "y": 2, "width": 47, "height": 46 }
+        },
+        {
+            "nameId": "grass_plain_obstacle_horizontal",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 767, "y": 551 },
+            "sourceSize": { "width": 48, "height": 16 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 2, "y": 0, "width": 44, "height": 16 }
+        },
+        {
+            "nameId": "grass_plain_obstacle_vertical",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 989, "y": 341 },
+            "sourceSize": { "width": 16, "height": 48 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 1, "y": 7, "width": 15, "height": 41 }
+        },
+        {
+            "nameId": "grass_plain_points",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 767, "y": 453 },
+            "sourceSize": { "width": 32, "height": 48 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 0, "y": 0, "width": 32, "height": 48 }
+        },
+        {
+            "nameId": "plains",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 813, "y": 0 },
+            "sourceSize": { "width": 96, "height": 192 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 0, "y": 0, "width": 96, "height": 192 }
+        },
+        {
+            "nameId": "water_decorations",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 0, "y": 595 },
+            "sourceSize": { "width": 96, "height": 32 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 1, "y": 5, "width": 94, "height": 25 }
+        },
+        {
+            "nameId": "water_lillies",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 315, "y": 595 },
+            "sourceSize": { "width": 96, "height": 16 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 1, "y": 1, "width": 94, "height": 13 }
+        },
+        {
+            "nameId": "water1",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 813, "y": 392 },
+            "sourceSize": { "width": 96, "height": 64 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 16, "y": 0, "width": 80, "height": 48 }
+        },
+        {
+            "nameId": "water2",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 909, "y": 390 },
+            "sourceSize": { "width": 96, "height": 64 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 16, "y": 0, "width": 80, "height": 48 }
+        },
+        {
+            "nameId": "water3",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 909, "y": 438 },
+            "sourceSize": { "width": 96, "height": 64 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 16, "y": 0, "width": 80, "height": 48 }
+        },
+        {
+            "nameId": "water4",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 813, "y": 440 },
+            "sourceSize": { "width": 96, "height": 64 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 16, "y": 0, "width": 80, "height": 48 }
+        },
+        {
+            "nameId": "water5",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 909, "y": 342 },
+            "sourceSize": { "width": 96, "height": 64 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 16, "y": 0, "width": 80, "height": 48 }
+        },
+        {
+            "nameId": "water6",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 909, "y": 486 },
+            "sourceSize": { "width": 96, "height": 64 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 16, "y": 0, "width": 80, "height": 48 }
+        },
+        {
+            "nameId": "walls",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 909, "y": 127 },
+            "sourceSize": { "width": 128, "height": 128 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 0, "y": 9, "width": 89, "height": 87 }
+        },
+        {
+            "nameId": "wooden_door",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 767, "y": 567 },
+            "sourceSize": { "width": 32, "height": 16 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 0, "y": 0, "width": 32, "height": 16 }
+        },
+        {
+            "nameId": "wooden_door_b",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 976, "y": 579 },
+            "sourceSize": { "width": 32, "height": 16 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 0, "y": 0, "width": 32, "height": 16 }
+        },
+        {
+            "nameId": "carpet",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 909, "y": 0 },
+            "sourceSize": { "width": 96, "height": 128 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 1, "y": 0, "width": 95, "height": 127 }
+        },
+        {
+            "nameId": "flooring",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 909, "y": 534 },
+            "sourceSize": { "width": 80, "height": 48 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 3, "y": 0, "width": 77, "height": 45 }
+        },
+        {
+            "nameId": "wooden",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 110, "y": 595 },
+            "sourceSize": { "width": 16, "height": 16 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 0, "y": 0, "width": 16, "height": 16 }
+        },
+        {
+            "nameId": "dust_particles_01",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 483, "y": 595 },
+            "sourceSize": { "width": 48, "height": 12 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 3, "y": 3, "width": 28, "height": 6 }
+        },
+        {
+            "nameId": "bush",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 767, "y": 501 },
+            "sourceSize": { "width": 32, "height": 32 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 0, "y": 0, "width": 32, "height": 32 }
+        },
+        {
+            "nameId": "bush_height",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 860, "y": 488 },
+            "sourceSize": { "width": 32, "height": 48 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 4, "y": 6, "width": 23, "height": 42 }
+        },
+        {
+            "nameId": "chest_01",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 158, "y": 595 },
+            "sourceSize": { "width": 64, "height": 16 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 0, "y": 1, "width": 64, "height": 15 }
+        },
+        {
+            "nameId": "chest_02",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 222, "y": 595 },
+            "sourceSize": { "width": 64, "height": 16 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 0, "y": 1, "width": 64, "height": 15 }
+        },
+        {
+            "nameId": "log_long",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 409, "y": 595 },
+            "sourceSize": { "width": 48, "height": 16 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 2, "y": 2, "width": 45, "height": 13 }
+        },
+        {
+            "nameId": "log_short",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 454, "y": 595 },
+            "sourceSize": { "width": 32, "height": 16 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 2, "y": 2, "width": 29, "height": 13 }
+        },
+        {
+            "nameId": "log_short_flower",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 286, "y": 595 },
+            "sourceSize": { "width": 32, "height": 16 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 2, "y": 1, "width": 29, "height": 15 }
+        },
+        {
+            "nameId": "map_objects",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 832, "y": 579 },
+            "sourceSize": { "width": 144, "height": 32 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 0, "y": 0, "width": 144, "height": 32 }
+        },
+        {
+            "nameId": "rock_in_water_01",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 799, "y": 583 },
+            "sourceSize": { "width": 16, "height": 16 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 0, "y": 0, "width": 16, "height": 16 }
+        },
+        {
+            "nameId": "rock_in_water_02",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 126, "y": 595 },
+            "sourceSize": { "width": 16, "height": 16 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 0, "y": 0, "width": 16, "height": 16 }
+        },
+        {
+            "nameId": "rock_in_water_03",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 799, "y": 567 },
+            "sourceSize": { "width": 16, "height": 16 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 0, "y": 0, "width": 16, "height": 16 }
+        },
+        {
+            "nameId": "rock_in_water_04",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 767, "y": 583 },
+            "sourceSize": { "width": 16, "height": 16 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 0, "y": 0, "width": 16, "height": 16 }
+        },
+        {
+            "nameId": "rock_in_water_05",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 783, "y": 583 },
+            "sourceSize": { "width": 16, "height": 16 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 0, "y": 0, "width": 16, "height": 16 }
+        },
+        {
+            "nameId": "rock_in_water_06",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 142, "y": 595 },
+            "sourceSize": { "width": 16, "height": 16 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 0, "y": 0, "width": 16, "height": 16 }
+        },
+        {
+            "nameId": "tree_flowers",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 813, "y": 270 },
+            "sourceSize": { "width": 48, "height": 64 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 1, "y": 0, "width": 45, "height": 64 }
+        },
+        {
+            "nameId": "tree_flowers_height",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 858, "y": 270 },
+            "sourceSize": { "width": 48, "height": 64 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 2, "y": 3, "width": 43, "height": 61 }
+        },
+        {
+            "nameId": "tree_normal",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 909, "y": 278 },
+            "sourceSize": { "width": 48, "height": 64 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 1, "y": 0, "width": 45, "height": 64 }
+        },
+        {
+            "nameId": "tree_normal_height",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 858, "y": 331 },
+            "sourceSize": { "width": 48, "height": 64 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 3, "y": 3, "width": 43, "height": 61 }
+        },
+        {
+            "nameId": "tree_stomp",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 767, "y": 533 },
+            "sourceSize": { "width": 32, "height": 32 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 2, "y": 10, "width": 26, "height": 18 }
+        },
+        {
+            "nameId": "tree_stomp_short",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 989, "y": 382 },
+            "sourceSize": { "width": 32, "height": 32 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 6, "y": 10, "width": 20, "height": 17 }
+        },
+        {
+            "nameId": "player",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 556, "y": 0 },
+            "sourceSize": { "width": 288, "height": 480 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 15, "y": 22, "width": 257, "height": 453 }
+        },
+        {
+            "nameId": "skeleton",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 278, "y": 0 },
+            "sourceSize": { "width": 288, "height": 624 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 7, "y": 21, "width": 278, "height": 595 }
+        },
+        {
+            "nameId": "skeleton_swordless",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 0, "y": 0 },
+            "sourceSize": { "width": 288, "height": 624 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 7, "y": 21, "width": 278, "height": 595 }
+        },
+        {
+            "nameId": "slime",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 556, "y": 453 },
+            "sourceSize": { "width": 224, "height": 416 },
+            "padding": 0,
+            "trimmed": true,
+            "trimRec": { "x": 6, "y": 12, "width": 211, "height": 396 }
+        }
+    ]
+}

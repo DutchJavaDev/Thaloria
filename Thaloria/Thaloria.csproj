@@ -9,16 +9,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Maps\enviroment.tsj" />
     <None Remove="Resources\Maps\enviromentTileset.tsj" />
     <None Remove="Resources\Maps\Home.tmj" />
+    <None Remove="Resources\Maps\Thaloria.tmj" />
     <None Remove="Resources\Maps\water-sheet.tsj" />
     <None Remove="Resources\Tilesets\enviroment.json" />
     <None Remove="Resources\Tilesets\water-sheet.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Maps\enviroment.tsj" />
     <EmbeddedResource Include="Resources\Maps\enviromentTileset.tsj" />
     <EmbeddedResource Include="Resources\Maps\Home.tmj" />
+    <EmbeddedResource Include="Resources\Maps\Thaloria.tmj" />
     <EmbeddedResource Include="Resources\Maps\water-sheet.tsj" />
     <EmbeddedResource Include="Resources\Tilesets\enviroment.json" />
     <EmbeddedResource Include="Resources\Tilesets\water-sheet.json" />
@@ -40,7 +44,13 @@
     <None Update="Resources\Tilesets\player.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Resources\Tilesets\skeleton.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\Tilesets\skeleton_swordless.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Tilesets\slime.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\Tilesets\water-sheet.png">
@@ -49,6 +59,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="TextureOutput\" />
     <Folder Include="Resources\Tiled\" />
   </ItemGroup>
 
