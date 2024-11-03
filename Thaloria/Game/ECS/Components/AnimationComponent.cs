@@ -42,8 +42,8 @@ namespace Thaloria.Game.ECS.Components
     {
       var currentAnimation = GetCurrentAnimation();
 
-      var x = CurrentFrame * FrameWidth; ;
-      var y = currentAnimation.RowStart* FrameHeight;
+      var x = CurrentFrame * FrameWidth;
+      var y = currentAnimation.RowStart * FrameHeight;
 
       return new(x,y);
     }
