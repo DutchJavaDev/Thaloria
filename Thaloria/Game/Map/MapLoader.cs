@@ -35,7 +35,7 @@ namespace Thaloria.Game.Map
     private TiledMapTileSet? currentMapTileSet;
     private TiledMap? tiledMap;
 
-    public TiledCollisionObject GetTileCollisionObjectByName(string name)
+    public TiledCollisionObject GetObjectByName(string name)
     {
       var @object = Layers.Find(i => i.Name == ObjectsLayerName);
 
@@ -63,11 +63,6 @@ namespace Thaloria.Game.Map
         TileHeight = tiledMap.Tileheight;
 
         Layers = tiledMap.Layers;
-
-        // Using a single tileset
-        //var tileSetName = tiledExport.Tilesets[0].Source.Trim().Split(@"../Tiled/")[1].Split('.')[0];
-
-        //var tilesetNames = tiledExport.Tilesets.Select(i => i.Source.Trim().Split(@"../Tiled/")[1].Split('.')[0]);
 
         foreach (var tileset in tiledMap.Tilesets)
         {
@@ -131,8 +126,6 @@ namespace Thaloria.Game.Map
     {
       // Ground layer
       var groundTileId = GetTileId(x, y, groundLayer.Data, groundLayer.Width, groundLayer.Height);
-      var xposition = x * TileWidth;
-      var yposition = y * TileHeight;
 
       if (nextTilemap != null)
       {
@@ -148,6 +141,10 @@ namespace Thaloria.Game.Map
           return;
         }
       }
+
+      var xposition = x * TileWidth;
+      var yposition = y * TileHeight;
+
 
       if (groundTileId != 0)
       {
@@ -218,7 +215,7 @@ namespace Thaloria.Game.Map
 
       // Get texture location
       if (topTileMetaData != null && !string.IsNullOrEmpty(topTileMetaData.TextureName))
-      {
+        {
         // Check if it has parent_id, if it does then skip
         hasParentId = topTileMetaData.TryGetIntProperty("parent_id", out _);
 
@@ -239,6 +236,31 @@ namespace Thaloria.Game.Map
         {
           return;
         } // This still needed?
+
+        // This might not work?
+        if (topTileMetaData.HasAnimation)
+        {
+          var ids = topTileMetaData?.Animations?.Select(i => i.TileId).ToArray();
+          var frames = new List<Rectangle>();
+          for (int i = 0; i < ids?.Length; i++)
+          {
+            var id = ids[i];
+
+            var frameTexturePosition = GetTexturePosition(id + 1, TileWidth, TileHeight, TileSetImageWidth);
+            frames.Add(new()
+            {
+              Position = frameTexturePosition,
+              Width = TileWidth,
+              Height = TileHeight,
+            });
+          }
+
+          // Why do i need to do +1
+          AddCollisionBodies((topTileId - currentMapTileSet.Firstgid) + 1, xposition, yposition);
+
+          TileData.Add(new(topLayer.Id, topTileId, new(), new(xposition, yposition), ImageName, true, [.. frames]));
+          return;
+        }
 
         AddTile(topLayer.Id, topTileId, xposition, yposition);
       }
