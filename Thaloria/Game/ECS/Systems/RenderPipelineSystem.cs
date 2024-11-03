@@ -16,6 +16,10 @@ namespace Thaloria.Game.ECS.Systems
     private readonly World _world;
     private EntitySet _entitySet;
 
+    private float ElapsedTime = 0f;
+    private readonly float UpdateTime = 0.145f;
+    private bool UpdateFrames = false;
+
     public RenderPipelineSystem(World world, TileData[] tileData) 
     {
       _world = world;
@@ -26,10 +30,14 @@ namespace Thaloria.Game.ECS.Systems
         isPlayer = false,
         hasTexture = true,
         Position = i.RenderPosition,
-        TexturePosition = i.TexturePosition,
+        TexturePosition = i.HasAnimation ? i.RenderFrames[0] : i.TexturePosition,
         YIndex = (int)(i.RenderPosition.Y + i.TexturePosition.Height),
         TextureName = i.TextureName,
-        isStatic = true,
+        isStatic = true, // ??? 
+        HasAnimation = i.HasAnimation,
+        AnimationFrames = i.HasAnimation ? i.RenderFrames : default,
+        Guid = i.guid
+
       }).ToList();
 
       // TODO needs testing
@@ -66,15 +74,24 @@ namespace Thaloria.Game.ECS.Systems
         var hasAnimationComponent = entity.Has<AnimationComponent>();
         var hasPlayerComponent = entity.Has<PlayerComponent>();
 
-
         ref RenderComponent renderComponent = ref entity.Get<RenderComponent>();
 
         var physicsBody = PhysicsWorld.Instance.GetBodyByTag(id);
         var position = physicsBody.Position;
 
         // center on sprite
-        position.X -= renderComponent.TextureWidth / 2;
-        position.Y -= renderComponent.TextureHeight / 1.5f;
+
+        // This is a buf that is fixed with this crazy if statement lol..
+        //if (renderComponent.TextureWidth == 48)
+        //{
+        //  position.X -= renderComponent.TextureWidth / 2;
+        //  position.Y -= renderComponent.TextureHeight / 1.5f;
+        //}
+        //else
+        //{
+        //  position.X -= renderComponent.TextureWidth / 2;
+        //  position.Y -= renderComponent.TextureHeight / 2;
+        //}
 
         var frameX = 0f;
         var frameY = 0f;
@@ -102,7 +119,7 @@ namespace Thaloria.Game.ECS.Systems
             Color = renderComponent.RenderColor,
             Position = new Vector2(position.X, position.Y),
             TexturePosition = new Rectangle(frameX, frameY, renderComponent.TextureWidth, renderComponent.TextureHeight),
-            TextureName = renderComponent.TextureName,
+            TextureName = renderComponent.HasTexture ? renderComponent.TextureName : string.Empty,
             YIndex = (int)(position.Y + renderComponent.TextureHeight),
             FlipTexure = flipTexture,
           });
@@ -117,6 +134,46 @@ namespace Thaloria.Game.ECS.Systems
           YindexItem.TexturePosition.Y = frameY;
           YindexItem.FlipTexure = flipTexture;
           yIndexItems[yIndexId] = YindexItem;
+        }
+      }
+
+      ElapsedTime += state;
+      UpdateFrames = false;
+
+      if (ElapsedTime > UpdateTime)
+      {
+        ElapsedTime = 0f;
+        UpdateFrames = true;
+      }
+
+
+      // refactor this, make it more readable
+      if (UpdateFrames) 
+      {
+        // Update animated tiles
+        var animatedTilesIds = yIndexItems.Where(i => i.HasAnimation).Select(i => i.Guid).ToList();
+
+        foreach (var animatedTileId in animatedTilesIds)
+        {
+          var index = yIndexItems.FindIndex(i => i.Guid == animatedTileId);
+
+          var yindexItem = yIndexItems[index];
+
+          // Update
+          var frame = yindexItem.AnimationFrame;
+
+          frame++;
+
+          if (frame > yindexItem.AnimationFrames.Length - 1)
+          {
+            frame = 0;
+          }
+
+          yindexItem.AnimationFrame = frame;
+          yindexItem.TexturePosition = yindexItem.AnimationFrames[frame];
+
+          // set back
+          yIndexItems[index] = yindexItem;
         }
       }
 
@@ -143,22 +200,17 @@ namespace Thaloria.Game.ECS.Systems
           texturePosition.Width *= -1;
         }
 
-        if (item.isStatic && item.hasTexture)
+        if ((item.isStatic && item.hasTexture) || (item.hasTexture && !item.isStatic))
         {
           // Draw a the texture of the static component
+          // Draw dynamic and animated texture
           DrawTextureRec(ResourceManager.GetTexture2DTileset(item.TextureName), texturePosition, item.Position, Color.White);
         }
         
-        if (item.isStatic && !item.hasTexture)
+        if (!item.hasTexture)
         {
           // Draw rectangle incase I forgot to add a texture
           DrawRectangle((int)x,(int)y,(int)width,(int)height,item.Color);
-        }
-        
-        if(item.hasTexture && !item.isStatic)
-        {
-          // Draw dynamic and animated texture
-          DrawTextureRec(ResourceManager.GetTexture2DTileset(item.TextureName), texturePosition, new Vector2(x, y), Color.White);
         }
       }
       EndMode2D();
@@ -182,7 +234,10 @@ namespace Thaloria.Game.ECS.Systems
                     Rectangle texturePosition, 
                     string textureName, 
                     bool isStatic = false,
-                    bool flipTextue = false)
+                    bool flipTextue = false,
+                    bool animation = false,
+                    Rectangle[] animationFrames = default,
+                    Guid uniqueid = default)
   {
     public int Id = Id;
     public int YIndex = yIndex;
@@ -194,6 +249,10 @@ namespace Thaloria.Game.ECS.Systems
     public string TextureName = textureName;
     public bool isStatic = isStatic;
     public bool FlipTexure = flipTextue;
+    public bool HasAnimation = animation;
+    public Rectangle[] AnimationFrames = animationFrames;
+    public int AnimationFrame = 0;
+    public Guid Guid = uniqueid;
     public readonly Rectangle Bounds => new(Position.X,Position.Y,TexturePosition.Width,TexturePosition.Height);
   }
 }
