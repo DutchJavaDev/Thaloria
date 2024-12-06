@@ -28,7 +28,57 @@ namespace Thaloria.Game.Map.Tiled
     [JsonPropertyName("x")]
     public double X { get; set; }
 
+    [JsonIgnore]
+    public float Xf => (float)X;
+
     [JsonPropertyName("y")]
     public double Y { get; set; }
+
+    [JsonIgnore]
+    public float Yf => (float)Y;
+
+    [JsonPropertyName("properties")]
+    public List<TiledMapTileProperty>? Properties { get; set; }
+
+    public bool TryGetIntProperty(string name, out int value)
+    {
+      var property = Properties?.FirstOrDefault(i => i.Name == name);
+
+      if (property != null)
+      {
+        value = int.Parse(property.Value?.ToString() ?? string.Empty);
+        return true;
+      }
+
+      value = default;
+      return false;
+    }
+
+    public bool TryGetStringProperty(string name, out string value)
+    {
+      var property = Properties?.FirstOrDefault(x => x.Name == name);
+      if (property != null)
+      {
+        value = property.Value?.ToString();
+        return true;
+      }
+
+      value = string.Empty;
+      return false;
+    }
+
+    public bool TryGetBoolProperty(string name, out bool value)
+    {
+      var property = Properties?.FirstOrDefault(x => x.Name == name);
+
+      if (property != null)
+      {
+        value = bool.Parse(property.Value?.ToString() ?? string.Empty);
+        return true;
+      }
+
+      value = false;
+      return false;
+    }
   }
 }

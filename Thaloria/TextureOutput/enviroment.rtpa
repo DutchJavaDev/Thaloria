@@ -1,0 +1,41 @@
+#
+# rTexPacker atlas descriptor file (v2.0)
+#
+# Number of packed sprites:     32
+#
+# Atlas info:    a <imagePath> <width> <height> <spriteCount> <isFont> <fontSize>
+# Sprite info:   s <nameId> <originX> <originY> <positionX> <positionY> <sourceWidth> <sourceHeight> <padding> <trimmed> <trimRecX> <trimRecY> <trimRecWidth> <trimRecHeight>
+#
+a enviroment.png 512 512 32 0 32
+s tree_flowers 0 0 336 0 48 64 0 0 1 0 45 64
+s tree_flowers_height 0 0 0 128 48 64 0 0 2 3 43 61
+s tree_normal 0 0 48 128 48 64 0 0 1 0 45 64
+s tree_normal_height 0 0 288 0 48 64 0 0 3 3 43 61
+s tree_stomp 0 0 112 240 32 32 0 0 2 10 26 18
+s tree_stomp_short 0 0 384 240 32 32 0 0 6 10 20 17
+s bush 0 0 416 240 32 32 0 0 0 0 32 32
+s bush_height 0 0 80 240 32 48 0 0 4 6 23 42
+s chest_01 0 0 448 240 64 16 0 0 0 1 64 15
+s chest_02 0 0 144 288 64 16 0 0 0 1 64 15
+s log_long 0 0 208 288 48 16 0 0 2 2 45 13
+s log_short 0 0 320 288 32 16 0 0 2 2 29 13
+s log_short_flower 0 0 384 288 32 16 0 0 2 1 29 15
+s map_objects 0 0 240 240 144 32 0 0 0 0 144 32
+s rock_in_water_01-sheet 0 0 48 288 96 16 0 0 0 0 96 16
+s water-sheet 0 0 0 192 480 48 0 0 0 0 480 48
+s decor_16x16 0 0 224 0 64 80 0 0 0 0 64 78
+s fences 0 0 384 0 64 64 0 0 2 1 61 63
+s grass 0 0 352 288 16 16 0 0 0 0 16 16
+s grass_plain 0 0 448 0 64 64 0 0 0 0 64 64
+s grass_plain_obstacle 0 0 96 128 48 48 0 0 1 2 47 46
+s grass_plain_obstacle_horizontal 0 0 0 288 48 16 0 0 2 0 44 16
+s grass_plain_obstacle_vertical 0 0 144 128 16 48 0 0 1 7 15 41
+s grass_plain_points 0 0 160 128 32 48 0 0 0 0 32 48
+s water_decorations 0 0 144 240 96 32 0 0 1 5 94 25
+s wooden_door 0 0 256 288 32 16 0 0 0 0 32 16
+s wooden_door_b 0 0 288 288 32 16 0 0 0 0 32 16
+s walls 0 0 0 0 128 128 0 0 0 9 89 87
+s flooring 0 0 0 240 80 48 0 0 3 0 77 45
+s wooden 0 0 368 288 16 16 0 0 0 0 16 16
+s carpet 0 0 128 0 96 128 0 0 1 0 95 127
+s dust_particles_01 0 0 416 288 48 12 0 0 3 3 28 6

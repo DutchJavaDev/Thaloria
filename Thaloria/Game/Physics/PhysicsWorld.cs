@@ -21,22 +21,41 @@ namespace Thaloria.Game.Physics
 
     public bool IsEnabled { get; set; }
 
-    public void CreateDynamicBody(float x, float y, float width, float height, int tag)
+    public void CreatePolygonBody(float x, float y, Vector2[] _verticies)
+    {
+      var verticies = new Vertices(_verticies);
+
+      var body = World.CreatePolygon(verticies,1f,new Vector2(x,y));
+
+      body.FixedRotation = true;
+    }
+
+    public void CreateDynamicBody(float x, float y, float width, float height, int tag, OnCollisionEventHandler handler = null)
     {
       var body = World.CreateRectangle(width, height, 1f, new Vector2(x, y), 0, BodyType.Dynamic);
       body.FixedRotation = true;
       body.Tag = tag;
+       
+      if (handler != null) 
+      {
+        body.OnCollision += handler;
+      }
     }
 
-    public void CreateStaticBody(float x, float y, float width, float height)
+    public void CreateStaticBody(float x, float y, float width, float height, int tag = -1, OnCollisionEventHandler handler = null)
     {
       var body = World.CreateRectangle(width, height, 1f, new Vector2(x, y),0);
-      body.Tag = -1;
+      body.Tag = tag;
+
+      if (handler != null)
+      {
+        body.OnCollision += handler;
+      }
     }
 
-    public Body GetBodyByTag(int tag)
+    public Body? GetBodyByTag(int tag)
     {
-      return World.BodyList.First(i => i.Tag.Equals(tag));
+      return World.BodyList.FirstOrDefault(i => i.Tag != null && i.Tag.Equals(tag));
     }
 
     public BodyCollection GetBodies() => World.BodyList;

@@ -3,47 +3,42 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "Thaloria.tmx",
     "expandedProjectPaths": [
     ],
     "fileStates": {
-        "Home.tmx": {
-            "scale": 3,
-            "selectedLayer": 1,
+        "Thaloria.tmx": {
+            "scale": 2,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 515,
-                "y": 183.16666666666669
+                "x": 231.25,
+                "y": 87.75
             }
         },
-        "enviromentTileset.tsx": {
-            "dynamicWrapping": false,
-            "scaleInDock": 1.5,
-            "scaleInEditor": 2
-        },
-        "water-sheet.tsx": {
-            "dynamicWrapping": false,
-            "scaleInDock": 1,
-            "scaleInEditor": 2
+        "enviroment.tsx": {
+            "scaleInDock": 2,
+            "scaleInEditor": 3
         }
     },
     "frame.defaultDuration": 100,
     "last.exportedFilePath": "D:/Users/BMulder/source projects/Thaloria/Thaloria/Resources/Maps",
     "last.imagePath": "D:/Users/BMulder/source projects/Thaloria/Thaloria/Resources/Tilesets",
     "lastUsedTilesetExportFilter": "JSON tileset files (*.tsj *.json)",
-    "map.height": 40,
+    "map.height": 10,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "map.lastUsedFormat": "tmx",
     "map.tileHeight": 16,
     "map.tileWidth": 16,
-    "map.width": 40,
+    "map.width": 10,
     "openFiles": [
+        "Thaloria.tmx",
+        "enviroment.tsx"
     ],
-    "project": "home.tiled-project",
+    "project": "thaloria.tiled-project",
     "property.type": "int",
     "recentFiles": [
-        "Home.tmx",
-        "enviromentTileset.tsx",
-        "water-sheet.tsx"
+        "Thaloria.tmx",
+        "enviroment.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

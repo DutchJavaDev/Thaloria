@@ -1,0 +1,71 @@
+{
+    "software": {
+        "name": "rTexPacker v3.0",
+        "url": "https://raylibtech.itch.io/rtexpacker"
+    },
+  "atlas": {
+    "imagePath": "water-sheet.png",
+    "width": 256,
+    "height": 256,
+    "spriteCount": 6,
+    "isFont": false,
+    "fontSize": 32
+  },
+
+    "sprites": [
+        {
+            "nameId": "water1",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 0, "y": 0 },
+            "sourceSize": { "width": 48, "height": 48 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 0, "y": 0, "width": 48, "height": 48 }
+        },
+        {
+            "nameId": "water2",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 48, "y": 0 },
+            "sourceSize": { "width": 48, "height": 48 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 0, "y": 0, "width": 48, "height": 48 }
+        },
+        {
+            "nameId": "water3",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 96, "y": 0 },
+            "sourceSize": { "width": 48, "height": 48 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 0, "y": 0, "width": 48, "height": 48 }
+        },
+        {
+            "nameId": "water4",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 144, "y": 0 },
+            "sourceSize": { "width": 48, "height": 48 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 0, "y": 0, "width": 48, "height": 48 }
+        },
+        {
+            "nameId": "water5",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 192, "y": 0 },
+            "sourceSize": { "width": 48, "height": 48 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 0, "y": 0, "width": 48, "height": 48 }
+        },
+        {
+            "nameId": "water6",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 0, "y": 48 },
+            "sourceSize": { "width": 48, "height": 48 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 0, "y": 0, "width": 48, "height": 48 }
+        }
+    ]
+}

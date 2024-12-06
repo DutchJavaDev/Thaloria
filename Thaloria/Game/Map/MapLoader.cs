@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text.Json;
 using Thaloria.Game.Map.Tiled;
 using Thaloria.Game.Physics;
+using Thaloria.Loaders;
 
 namespace Thaloria.Game.Map
 {
@@ -12,11 +13,12 @@ namespace Thaloria.Game.Map
     private static readonly string GroundLayerName = "ground";
     private static readonly string TopLayerName = "top";
     private static readonly string CollisionLayerObjectsName = "collision";
+    private static readonly string ObjectsLayerName = "objects";
     private static readonly string MapFileExtension = ".tmj";
     private static readonly string TilesetFileExtension = ".tsj";
-    private static readonly Assembly CurrentAssembly = Assembly.GetExecutingAssembly();
+    private static readonly Assembly CurrentAssembly = Program.CurrentAssembly;
 
-    public string ImageName { get; private set; } = string.Empty;
+    private string ImageName = string.Empty;
     public int MapWidth { get; private set; } = 0;
     public int MapHeight { get; private set; } = 0;
     public int TileWidth { get; private set; } = 0;
@@ -28,8 +30,24 @@ namespace Thaloria.Game.Map
     public TileData[] TopTileData => TileData.Where(i => i.LayerId == 2).ToArray();
     
     private List<TiledMapLayer> Layers = [];
-    private TiledMapTile[] TileCollisionData = [];
+    private TiledMapTile[]? TileCollisionData = [];
     private readonly CustomTileLoader CustomTileLoader = new();
+    private TiledMapTileSet? currentMapTileSet;
+    private TiledMap? tiledMap;
+
+    public TiledCollisionObject GetObjectByName(string name)
+    {
+      var @object = Layers.Find(i => i.Name == ObjectsLayerName);
+
+      return @object.Objects.Find(i => i.Name.Equals(name));
+    }
+
+    public IEnumerable<TiledCollisionObject> GetObjectsByBame(string name)
+    {
+      var @object = Layers.Find(i => i.Name == ObjectsLayerName);
+
+      return @object.Objects.Where(i => i.Name.Equals(name));
+    }
 
     public async Task LoadMap()
     {
@@ -37,39 +55,54 @@ namespace Thaloria.Game.Map
       {
         var mapResourcePath = CreateResourcePath("Maps",$"{mapName}{MapFileExtension}");
 
-        var tiledExport = await DeserilizeResouceFromStream<TiledMap>(mapResourcePath);
+        tiledMap = await DeserilizeResouceFromStream<TiledMap>(mapResourcePath);
 
-        MapWidth = tiledExport.Width * tiledExport.Tilewidth;
-        MapHeight = tiledExport.Height * tiledExport.Tileheight;
-        TileWidth = tiledExport.Tilewidth;
-        TileHeight = tiledExport.Tileheight;
+        MapWidth = tiledMap.Width * tiledMap.Tilewidth;
+        MapHeight = tiledMap.Height * tiledMap.Tileheight;
+        TileWidth = tiledMap.Tilewidth;
+        TileHeight = tiledMap.Tileheight;
 
-        Layers = tiledExport.Layers;
+        Layers = tiledMap.Layers;
 
-        // Using a single tileset
-        var tileSetName = tiledExport.Tilesets[0].Source.Trim().Split(@"../Tiled/")[1].Split('.')[0];
-        var tileSetResourcePath = CreateResourcePath("Maps",$"{tileSetName}{TilesetFileExtension}");
+        foreach (var tileset in tiledMap.Tilesets)
+        {
+          currentMapTileSet = tileset;
 
-        var tileSetImage = await DeserilizeResouceFromStream<TiledMapTileSetImage>(tileSetResourcePath);
+          await LoadTileSet(currentMapTileSet);
+        }
 
-        TileSetImageWidth = tileSetImage.Imagewidth;
-        TileSetImageHeight = tileSetImage.Imageheight;
-        ImageName = tileSetImage.ImageName.Trim().Split(@"../Tilesets/")[1];
-        TileCollisionData = tileSetImage.Tiles;
-
-        // Load TileAtlas data
-        var tileAtlasPath = CreateResourcePath("Tilesets", $"{ImageName.Split('.')[0]}.json");
-        var tileAtlas = await DeserilizeResouceFromStream<TileAtlas>(tileAtlasPath);
-        CustomTileLoader.LoadAtlasData(tileAtlas);
-
-        LoadTileData();
-        LoadCollisionObjects();
+        // Not needed?
+        // If I do, need to add the collision objects as polygons then 
+        // LoadCollisionObjects();
       }
     }
+    private async Task LoadTileSet(TiledMapTileSet tileset)
+    {
+      var tilesetName = tileset.Source.Trim().Split(@"../Tiled/")[1].Split('.')[0];
 
+      var tileSetResourcePath = CreateResourcePath("Maps", $"{tilesetName}{TilesetFileExtension}");
+
+      var tileSetImage = await DeserilizeResouceFromStream<TiledMapTileSetImage>(tileSetResourcePath);
+
+      TileSetImageWidth = tileSetImage.Imagewidth;
+      TileSetImageHeight = tileSetImage.Imageheight;
+      ImageName = tileSetImage.ImageName.Trim().Split(@"../Tilesets/")[1];
+      TileCollisionData = tileSetImage.Tiles;
+
+      // Load TileAtlas data
+      var tileAtlasPath = CreateResourcePath("Tilesets", $"{ImageName.Split('.')[0]}.json");
+      var tileAtlas = await DeserilizeResouceFromStream<TileAtlas>(tileAtlasPath);
+      CustomTileLoader.LoadAtlasData(tileAtlas);
+
+      LoadTileData();
+
+      ResourceManager.LoadResourceTexture2DTileset(ImageName, ImageName);
+
+      tileset.Loaded = true;
+    }
     private void LoadTileData()
     {
-      TileData = [];
+      TileData ??= [];
 
       var tiledMapWidth = MapWidth / TileWidth;
       var tiledMapHeight = MapHeight / TileHeight;
@@ -77,60 +110,163 @@ namespace Thaloria.Game.Map
       var groundLayer = Layers.First(i => i.Name == GroundLayerName);
       var topLayer = Layers.First(i => i.Name == TopLayerName);
 
-      var xposition = 0;
-      var yposition = 0;
-
       for (int x = 0; x < tiledMapWidth; x++)
       {
         for (int y = 0; y < tiledMapHeight; y++)
         {
+          var nextTilemap = tiledMap?.Tilesets?.Where(i => !i.Source.Equals(currentMapTileSet?.Source) && !i.Loaded).FirstOrDefault();
+
           // Ground layer
-          var groundTileId = GetTileId(x, y, groundLayer.Data, groundLayer.Width, groundLayer.Height);
-          xposition = x * TileWidth;
-          yposition = y * TileHeight;
-          AddTile(groundLayer.Id, groundTileId, xposition, yposition);
+          LoadGroundLayer(x,y,groundLayer,nextTilemap);
 
           // Top layer
-          var topTileId = GetTileId(x, y, topLayer.Data, topLayer.Width, topLayer.Height);
-          
-          // Need to subtract one because the exported index are off lol
-          var tileMetaData = TileCollisionData.FirstOrDefault(i => i.TileId == topTileId-1);
-          
-          var hasParentId = false;
-
-          xposition = x * TileWidth;
-          yposition = y * TileHeight;
-
-          // Get texture location
-          if (tileMetaData != null && !string.IsNullOrEmpty(tileMetaData.TextureName))
-          {
-            // Check if it has parent_id, if it does then skip
-            hasParentId = tileMetaData.TryGetIntProperty("parent_id", out _);
-            
-            if (hasParentId)
-            {
-              continue;
-            }
-
-            var texturePostion = CustomTileLoader.GetRectangle(tileMetaData.TextureName);
-
-            TileData.Add(new(topLayer.Id, topTileId, texturePostion, new(xposition, yposition)));
-          }
-          else
-          {
-            // Check if it has parent_id, if it does then skip
-            // Hate this double check...
-            if (topTileId == 0 || tileMetaData != null && tileMetaData.TryGetIntProperty("parent_id", out _))
-            {
-              continue;
-            }
-
-            AddTile(topLayer.Id, topTileId, xposition, yposition);
-          }
+          LoadTopLayer(x,y,topLayer,nextTilemap);
         }
       }
     }
+    private void LoadGroundLayer(int x, int y, TiledMapLayer groundLayer, TiledMapTileSet? nextTilemap) 
+    {
+      // Ground layer
+      var groundTileId = GetTileId(x, y, groundLayer.Data, groundLayer.Width, groundLayer.Height);
 
+      if (nextTilemap != null)
+      {
+        if (groundTileId >= nextTilemap.Firstgid)
+        {
+          return;
+        }
+      }
+      else
+      {
+        if (groundTileId < currentMapTileSet?.Firstgid)
+        {
+          return;
+        }
+      }
+
+      var xposition = x * TileWidth;
+      var yposition = y * TileHeight;
+
+
+      if (groundTileId != 0)
+      {
+        // water sheet / ground layer animated tiles
+        if (groundTileId >= currentMapTileSet?.Firstgid)
+        {
+          var groundTileMetaData = TileCollisionData?.FirstOrDefault(i => i.TileId == (groundTileId) - currentMapTileSet.Firstgid);
+
+          if (groundTileMetaData != null)
+          {
+            if (groundTileMetaData.HasAnimation)
+            {
+              var ids = groundTileMetaData?.Animations?.Select(i => i.TileId).ToArray();
+              var frames = new Rectangle[ids.Length];
+              for (int i = 0; i < ids?.Length; i++)
+              {
+                var id = ids[i];
+
+                var frameTexturePosition = GetTexturePosition(id + 1, TileWidth, TileHeight, TileSetImageWidth);
+                frames[i] =new()
+                {
+                  Position = frameTexturePosition,
+                  Width = TileWidth,
+                  Height = TileHeight,
+                };
+              }
+
+              // Why do i need to do +1
+              AddCollisionBodies((groundTileId - currentMapTileSet.Firstgid)+1, xposition, yposition);
+
+              TileData.Add(new(groundLayer.Id, groundTileId, new(), new(xposition, yposition), ImageName, true, frames));
+              return;
+            }
+          }
+        }
+
+        AddTile(groundLayer.Id, groundTileId, xposition, yposition);
+      }
+
+    }
+    private void LoadTopLayer(int x, int y, TiledMapLayer topLayer, TiledMapTileSet? nextTilemap) 
+    {
+      var topTileId = GetTileId(x, y, topLayer.Data, topLayer.Width, topLayer.Height);
+
+      if (topTileId == 0)
+        return;
+
+      if (nextTilemap != null)
+      {
+        if (topTileId >= nextTilemap.Firstgid)
+          return;
+      }
+      else
+      {
+        if (topTileId < currentMapTileSet?.Firstgid)
+        {
+          return;
+        }
+      }
+
+      // Need to subtract one because the exported index are off lol
+      var topTileMetaData = TileCollisionData?.FirstOrDefault(i => i.TileId == topTileId - 1);
+
+      var hasParentId = false;
+
+      var xposition = x * TileWidth;
+      var yposition = y * TileHeight;
+
+      // Get texture location
+      if (topTileMetaData != null && !string.IsNullOrEmpty(topTileMetaData.TextureName))
+        {
+        // Check if it has parent_id, if it does then skip
+        hasParentId = topTileMetaData.TryGetIntProperty("parent_id", out _);
+
+        if (hasParentId)
+        {
+          return;
+        }
+
+        var texturePostion = CustomTileLoader.GetRectangle(topTileMetaData.TextureName);
+
+        TileData.Add(new(topLayer.Id, topTileId, texturePostion, new(xposition, yposition), ImageName));
+      }
+      else
+      {
+        // Check if it has parent_id, if it does then skip
+        // Hate this double check...
+        if (topTileId == 0 || topTileMetaData != null && topTileMetaData.TryGetIntProperty("parent_id", out _))
+        {
+          return;
+        } // This still needed?
+
+        // This might not work?
+        if (topTileMetaData.HasAnimation)
+        {
+          var ids = topTileMetaData?.Animations?.Select(i => i.TileId).ToArray();
+          var frames = new Rectangle[ids.Length];
+          for (int i = 0; i < ids?.Length; i++)
+          {
+            var id = ids[i];
+
+            var frameTexturePosition = GetTexturePosition(id + 1, TileWidth, TileHeight, TileSetImageWidth);
+            frames[i] = new()
+            {
+              Position = frameTexturePosition,
+              Width = TileWidth,
+              Height = TileHeight,
+            };
+          }
+
+          // Why do i need to do +1
+          AddCollisionBodies((topTileId - currentMapTileSet.Firstgid) + 1, xposition, yposition);
+
+          TileData.Add(new(topLayer.Id, topTileId, new(), new(xposition, yposition), ImageName, true, frames));
+          return;
+        }
+
+        AddTile(topLayer.Id, topTileId, xposition, yposition);
+      }
+    }
     private void LoadCollisionObjects()
     {
       var collisionLayer = Layers.First(i => i.Name == CollisionLayerObjectsName);
@@ -142,10 +278,9 @@ namespace Thaloria.Game.Map
         var x = (float)obj.X + width / 2;
         var y = (float)obj.Y + height / 1.5f;
 
-        PhysicsWorld.Instance.CreateStaticBody(x,y,width,height);
+        //PhysicsWorld.Instance.CreateStaticBody(x,y,width,height);
       }
     }
-
     private void AddTile(int layerId, int tileId, int xposition, int yposition)
     {
       var textureVectorPosition = GetTexturePosition(tileId, TileWidth, TileHeight, TileSetImageWidth);
@@ -157,25 +292,33 @@ namespace Thaloria.Game.Map
         Height = TileHeight,
       };
 
-      var collisonBodies = TileCollisionData.Where(i => i.TileId == tileId-1).FirstOrDefault()?.CollisionGroup?.CollisionObjects;
+      AddCollisionBodies(tileId, xposition, yposition);
+
+      TileData.Add(new(layerId, tileId, texturePostion, new(xposition, yposition),ImageName));
+    }
+    private void AddCollisionBodies(int tileId, int xposition, int yposition)
+    {
+      var collisonBodies = TileCollisionData?.Where(i => i.TileId == tileId - 1).FirstOrDefault()?.CollisionGroup?.CollisionObjects;
       var hasCollisionBodies = collisonBodies?.Length > 0;
 
-      if (hasCollisionBodies)
+      if (hasCollisionBodies && collisonBodies != null)
       {
         foreach (var obj in collisonBodies)
         {
-          var width = (float)obj.Width;
-          var height = (float)obj.Height;
-          var x = (float)(xposition + obj.RelativeX) + width / 2;
-          var y = (float)(yposition + obj.RelativeY) + height / 1.5f;
+          if(obj.Polygons != null)
+          {
+            var vertices = obj.Vertices;
 
-          PhysicsWorld.Instance.CreateStaticBody(x, y, width, height);
-        }
+            var width = (float)obj.Width;
+            var height = (float)obj.Height;
+            var x = (float)(xposition + obj.RelativeX) + width / 2;
+            var y = (float)(yposition + obj.RelativeY) + height / 1.5f;
+
+            PhysicsWorld.Instance.CreatePolygonBody(x,y,vertices);
+          }
+        } 
       }
-
-      TileData.Add(new(layerId, tileId, texturePostion, new(xposition, yposition)));
     }
-
     private static int GetTileId(int x, int y, List<int> data, int Width, int Height)
     {
       if (x < 0 || x >= Width || y < 0 || y >= Height)
@@ -184,11 +327,10 @@ namespace Thaloria.Game.Map
       int index = y * Width + x;
       return data[index];
     }
-
-    private static Vector2 GetTexturePosition(int tileId, int mapWidth, int mapHeight, int textureWidth)
+    private static Vector2 GetTexturePosition(int tileId, int tileWidth, int tileHeight, int textureWidth)
     {
       // Calculate the number of columns in the texture
-      int cols = textureWidth / mapWidth;
+      int cols = textureWidth / tileWidth;
 
       // start at 0 not 1
       // zero based index?, need to find out why I actually need this
@@ -200,13 +342,12 @@ namespace Thaloria.Game.Map
       int row = tileId / cols;
 
       // Calculate the x and y coordinates
-      int x = col * mapWidth;
-      int y = row * mapHeight;
+      int x = col * tileWidth;
+      int y = row * tileHeight;
 
       return new(x, y);
     }
-
-    private static async Task<T> DeserilizeResouceFromStream<T>(string path) where T : class
+    private static async Task<T?> DeserilizeResouceFromStream<T>(string path) where T : class
     {
       using var resourceStream = CurrentAssembly.GetManifestResourceStream(path);
 
@@ -214,19 +355,23 @@ namespace Thaloria.Game.Map
 
       return JsonSerializer.Deserialize<T>(await resourceStreamReader?.ReadToEndAsync());
     }
-
     private static string CreateResourcePath(string mapName, string name)
     {
       return $"Thaloria.Resources.{mapName}.{name}";
     }
   }
-
   /// Tiled class data
-  public readonly struct TileData(int layerId, int tileId, Rectangle texturePos, Vector2 renderPos)
+  public readonly struct TileData(int layerId, int tileId, Rectangle texturePos, 
+    Vector2 renderPos, string textureName, bool 
+    hasAnimation = false, Rectangle[]? renderFrames = default)
   {
+    public readonly Guid guid = Guid.NewGuid();
     public readonly short LayerId = (short)layerId;
     public readonly short TileId = (short)tileId;
     public readonly Rectangle TexturePosition = texturePos;
     public readonly Vector2 RenderPosition = renderPos;
+    public readonly string TextureName = textureName;
+    public readonly bool HasAnimation = hasAnimation;
+    public readonly Rectangle[] RenderFrames = renderFrames ?? [];
   }
 }

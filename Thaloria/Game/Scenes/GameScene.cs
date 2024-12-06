@@ -1,16 +1,12 @@
 ﻿using Thaloria.Game.Interface;
 using Thaloria.Game.Map;
-using DefaultEcs;
 using DefaultEcs.System;
 using static Raylib_cs.Raylib;
 using Raylib_cs;
 using Thaloria.Game.ECS.Systems;
 using Thaloria.Game.ECS.Components;
-using Thaloria.Loaders;
 using System.Numerics;
-using Thaloria.Game.Helpers;
 using Thaloria.Game.Physics;
-using Thaloria.Game.ECS.Class;
 using Thaloria.Game.ECS;
 
 namespace Thaloria.Game.Scenes
@@ -19,23 +15,24 @@ namespace Thaloria.Game.Scenes
   {
     public SceneManagerEnum SceneReference => SceneManagerEnum.GameScene;
     private SceneManager? _sceneManager;
-    private readonly MapLoader Map = new("Home");
+    private readonly MapLoader Map = new("Thaloria");
+    private readonly CharacterLoader CharacterLoader = new();
     private readonly int gameScreenWidth = 640;
     private readonly int gameScreenHeight = 480;
 
     // ECS
-    private ISystem<float>? sequentialUpdateSystems;
-    private ISystem<float>? sequentialRenderSystems;
+    private SequentialSystem<float>? sequentialUpdateSystems;
+    private SequentialSystem<float>? sequentialRenderSystems;
 
     // Rendering
     private RenderTexture2D RenderTexture2D;
 
     public Task DisposeAsync()
     {
-      //PhysicsWorld.Instance.Dispose();
+      PhysicsWorld.Instance.Dispose();
       sequentialUpdateSystems?.Dispose();
       sequentialRenderSystems?.Dispose();
-      //EcsCreation.Instance.Dispose();
+      EcsCreation.Instance.Dispose();
       UnloadRenderTexture(RenderTexture2D);
       return Task.CompletedTask;
     }
@@ -49,12 +46,19 @@ namespace Thaloria.Game.Scenes
     {
       await Map.LoadMap();
 
-      ResourceManager.LoadResourceTexture2DTileset(ResourceNames.PlayerTileset, "player.png");
-      ResourceManager.LoadResourceTexture2DTileset(ResourceNames.TileTexture, Map.ImageName);
+      await CharacterLoader.LoadCharacters();
+
+      EcsCreation.SetWorldComponent(CharacterLoader);
 
       RenderTexture2D = LoadRenderTexture(gameScreenWidth, gameScreenHeight);
 
-      EcsCreation.CreatePlayer();
+      var playerSpawn = Map.GetObjectByName("player_spawn");
+
+      EcsCreation.CreatePlayer(playerSpawn.Xf, playerSpawn.Yf);
+
+      var npcs = Map.GetObjectsByBame("npc_spawn");
+
+      EcsCreation.SpawnNpcs(npcs);
 
       EcsCreation.SetWorldComponent(new CameraComponent(new Camera2D {
         Offset = new()

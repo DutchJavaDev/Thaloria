@@ -1,17 +1,17 @@
-﻿using System.Numerics;
+﻿using Raylib_cs;
+using System.Numerics;
 using Thaloria.Game.ECS.Class;
 using Thaloria.Game.Helpers;
 
 namespace Thaloria.Game.ECS.Components
 {
   public struct AnimationComponent(
-    string spriteSheet, 
+    Rectangle atlasRegion, 
     float frameWidth, 
     float frameHeight, 
     float updateTime,
     Animation[] animations)
   {
-    public readonly string SpriteSheetName = spriteSheet;
     public readonly float FrameWidth = frameWidth;
     public readonly float FrameHeight = frameHeight;
     public readonly float UpdateTime = updateTime;
@@ -42,8 +42,8 @@ namespace Thaloria.Game.ECS.Components
     {
       var currentAnimation = GetCurrentAnimation();
 
-      var x = CurrentFrame * FrameWidth; ;
-      var y = currentAnimation.RowStart* FrameHeight;
+      var x = atlasRegion.X + (CurrentFrame * FrameWidth);
+      var y = atlasRegion.Y + (currentAnimation.RowStart * FrameHeight);
 
       return new(x,y);
     }

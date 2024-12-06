@@ -1,0 +1,13 @@
+#
+# rTexPacker atlas descriptor file (v2.0)
+#
+# Number of packed sprites:     4
+#
+# Atlas info:    a <imagePath> <width> <height> <spriteCount> <isFont> <fontSize>
+# Sprite info:   s <nameId> <originX> <originY> <positionX> <positionY> <sourceWidth> <sourceHeight> <padding> <trimmed> <trimRecX> <trimRecY> <trimRecWidth> <trimRecHeight>
+#
+a characters.png 2048 2048 4 0 32
+s player 0 0 576 0 288 480 0 0 15 22 257 453
+s skeleton_swordless 0 0 0 0 288 624 0 0 7 21 278 595
+s slime 0 0 864 0 224 416 0 0 6 12 211 396
+s skeleton 0 0 288 0 288 624 0 0 7 21 278 595
