@@ -1,12 +1,13 @@
-﻿using Raylib_cs;
-using static Raylib_cs.Raylib;
+﻿using static Raylib_cs.Raylib;
 using Thaloria.Game;
+using System.Reflection;
 
 namespace Thaloria
 {
   static class Program
   {
     private readonly static ThaloriaGame Thaloria = new();
+    public static readonly Assembly CurrentAssembly = Assembly.GetExecutingAssembly();
     static async Task Main(string[] args)
     {
       var windowWidth = 1280;
