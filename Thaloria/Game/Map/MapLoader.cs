@@ -16,7 +16,7 @@ namespace Thaloria.Game.Map
     private static readonly string ObjectsLayerName = "objects";
     private static readonly string MapFileExtension = ".tmj";
     private static readonly string TilesetFileExtension = ".tsj";
-    private static readonly Assembly CurrentAssembly = Assembly.GetExecutingAssembly();
+    private static readonly Assembly CurrentAssembly = Program.CurrentAssembly;
 
     private string ImageName = string.Empty;
     public int MapWidth { get; private set; } = 0;
@@ -71,7 +71,9 @@ namespace Thaloria.Game.Map
           await LoadTileSet(currentMapTileSet);
         }
 
-        LoadCollisionObjects();
+        // Not needed?
+        // If I do, need to add the collision objects as polygons then 
+        // LoadCollisionObjects();
       }
     }
     private async Task LoadTileSet(TiledMapTileSet tileset)
@@ -158,24 +160,24 @@ namespace Thaloria.Game.Map
             if (groundTileMetaData.HasAnimation)
             {
               var ids = groundTileMetaData?.Animations?.Select(i => i.TileId).ToArray();
-              var frames = new List<Rectangle>();
+              var frames = new Rectangle[ids.Length];
               for (int i = 0; i < ids?.Length; i++)
               {
                 var id = ids[i];
 
                 var frameTexturePosition = GetTexturePosition(id + 1, TileWidth, TileHeight, TileSetImageWidth);
-                frames.Add(new()
+                frames[i] =new()
                 {
                   Position = frameTexturePosition,
                   Width = TileWidth,
                   Height = TileHeight,
-                });
+                };
               }
 
               // Why do i need to do +1
               AddCollisionBodies((groundTileId - currentMapTileSet.Firstgid)+1, xposition, yposition);
 
-              TileData.Add(new(groundLayer.Id, groundTileId, new(), new(xposition, yposition), ImageName, true, [.. frames]));
+              TileData.Add(new(groundLayer.Id, groundTileId, new(), new(xposition, yposition), ImageName, true, frames));
               return;
             }
           }
@@ -241,24 +243,24 @@ namespace Thaloria.Game.Map
         if (topTileMetaData.HasAnimation)
         {
           var ids = topTileMetaData?.Animations?.Select(i => i.TileId).ToArray();
-          var frames = new List<Rectangle>();
+          var frames = new Rectangle[ids.Length];
           for (int i = 0; i < ids?.Length; i++)
           {
             var id = ids[i];
 
             var frameTexturePosition = GetTexturePosition(id + 1, TileWidth, TileHeight, TileSetImageWidth);
-            frames.Add(new()
+            frames[i] = new()
             {
               Position = frameTexturePosition,
               Width = TileWidth,
               Height = TileHeight,
-            });
+            };
           }
 
           // Why do i need to do +1
           AddCollisionBodies((topTileId - currentMapTileSet.Firstgid) + 1, xposition, yposition);
 
-          TileData.Add(new(topLayer.Id, topTileId, new(), new(xposition, yposition), ImageName, true, [.. frames]));
+          TileData.Add(new(topLayer.Id, topTileId, new(), new(xposition, yposition), ImageName, true, frames));
           return;
         }
 
@@ -276,7 +278,7 @@ namespace Thaloria.Game.Map
         var x = (float)obj.X + width / 2;
         var y = (float)obj.Y + height / 1.5f;
 
-        PhysicsWorld.Instance.CreateStaticBody(x,y,width,height);
+        //PhysicsWorld.Instance.CreateStaticBody(x,y,width,height);
       }
     }
     private void AddTile(int layerId, int tileId, int xposition, int yposition)
@@ -299,17 +301,22 @@ namespace Thaloria.Game.Map
       var collisonBodies = TileCollisionData?.Where(i => i.TileId == tileId - 1).FirstOrDefault()?.CollisionGroup?.CollisionObjects;
       var hasCollisionBodies = collisonBodies?.Length > 0;
 
-      if (hasCollisionBodies)
+      if (hasCollisionBodies && collisonBodies != null)
       {
         foreach (var obj in collisonBodies)
         {
-          var width = (float)obj.Width;
-          var height = (float)obj.Height;
-          var x = (float)(xposition + obj.RelativeX) + width / 2;
-          var y = (float)(yposition + obj.RelativeY) + height / 1.5f;
+          if(obj.Polygons != null)
+          {
+            var vertices = obj.Vertices;
 
-          PhysicsWorld.Instance.CreateStaticBody(x, y, width, height);
-        }
+            var width = (float)obj.Width;
+            var height = (float)obj.Height;
+            var x = (float)(xposition + obj.RelativeX) + width / 2;
+            var y = (float)(yposition + obj.RelativeY) + height / 1.5f;
+
+            PhysicsWorld.Instance.CreatePolygonBody(x,y,vertices);
+          }
+        } 
       }
     }
     private static int GetTileId(int x, int y, List<int> data, int Width, int Height)
