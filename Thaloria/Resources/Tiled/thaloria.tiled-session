@@ -3,10 +3,22 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "Thaloria.tmx",
     "expandedProjectPaths": [
     ],
     "fileStates": {
+        "Thaloria.tmx": {
+            "scale": 2,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 231.25,
+                "y": 87.75
+            }
+        },
+        "enviroment.tsx": {
+            "scaleInDock": 2,
+            "scaleInEditor": 3
+        }
     },
     "frame.defaultDuration": 100,
     "last.exportedFilePath": "D:/Users/BMulder/source projects/Thaloria/Thaloria/Resources/Maps",
@@ -19,10 +31,14 @@
     "map.tileWidth": 16,
     "map.width": 10,
     "openFiles": [
+        "Thaloria.tmx",
+        "enviroment.tsx"
     ],
     "project": "thaloria.tiled-project",
     "property.type": "int",
     "recentFiles": [
+        "Thaloria.tmx",
+        "enviroment.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

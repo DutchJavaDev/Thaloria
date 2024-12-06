@@ -26,6 +26,13 @@
    <property name="parent_id" type="int" value="21"/>
   </properties>
  </tile>
+ <tile id="46">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="4.04444" y="7.02222">
+    <polygon points="0,0 0,2.95556 0.933333,2.97778 0.955556,3.84444 6.93333,3.86667 6.93333,1 5.93333,0.866667 5.93333,0.0444444 4.95556,-0.0444444 4.93333,-1.06667 0.977778,-1.08889 1.02222,-0.0222222"/>
+   </object>
+  </objectgroup>
+ </tile>
  <tile id="50">
   <properties>
    <property name="parent_id" type="int" value="18"/>
@@ -259,6 +266,9 @@
   <properties>
    <property name="parent_id" type="int" value="256"/>
   </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="16" height="16"/>
+  </objectgroup>
  </tile>
  <tile id="354">
   <properties>
@@ -281,6 +291,11 @@
   </properties>
  </tile>
  <tile id="384">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="15.9833" y="6.99444">
+    <polygon points="0,0 -2.30556,-0.0111111 -7.89444,-0.0611111 -8.96111,1.82778 -8.99036,9.0053"/>
+   </object>
+  </objectgroup>
   <animation>
    <frame tileid="384" duration="100"/>
    <frame tileid="389" duration="100"/>
@@ -291,6 +306,11 @@
   </animation>
  </tile>
  <tile id="385">
+  <objectgroup draworder="index" id="2">
+   <object id="2" x="0.0625" y="8">
+    <polygon points="-0.0321181,-1.0066 15.9048,-0.950174 15.9375,0.90625 -0.046875,1.03125"/>
+   </object>
+  </objectgroup>
   <animation>
    <frame tileid="385" duration="100"/>
    <frame tileid="390" duration="100"/>
@@ -301,6 +321,11 @@
   </animation>
  </tile>
  <tile id="386">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0.0222222" y="6.95556">
+    <polygon points="-0.0444444,0.133333 6,0.0666667 6.97778,1 11.9556,1.06667 12,2.97778 11.0222,3.02222 10.9802,9.0684"/>
+   </object>
+  </objectgroup>
   <animation>
    <frame tileid="386" duration="100"/>
    <frame tileid="391" duration="100"/>
@@ -331,6 +356,11 @@
   </animation>
  </tile>
  <tile id="416">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="7.08889" y="15.9333">
+    <polygon points="-0.0859375,0.0585938 -0.0874132,-15.9226 0.805122,-15.9304 0.818316,0.0625"/>
+   </object>
+  </objectgroup>
   <animation>
    <frame tileid="416" duration="100"/>
    <frame tileid="421" duration="100"/>
@@ -341,6 +371,11 @@
   </animation>
  </tile>
  <tile id="418">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="11.0444" y="-0.0222222">
+    <polygon points="0,0 0,16.0667 -1.13333,16.0444 -1.02222,0.0222222"/>
+   </object>
+  </objectgroup>
   <animation>
    <frame tileid="418" duration="100"/>
    <frame tileid="423" duration="100"/>
@@ -371,6 +406,11 @@
   </animation>
  </tile>
  <tile id="448">
+  <objectgroup draworder="index" id="2">
+   <object id="2" x="15.9111" y="12">
+    <polygon points="0.0894965,-1 -7.99514,-0.980556 -8.91319,-2.00182 -8.88568,-11.9922"/>
+   </object>
+  </objectgroup>
   <animation>
    <frame tileid="448" duration="100"/>
    <frame tileid="453" duration="100"/>
@@ -381,6 +421,11 @@
   </animation>
  </tile>
  <tile id="449">
+  <objectgroup draworder="index" id="2">
+   <object id="2" x="15.9556" y="10.9778">
+    <polygon points="0.0507813,0.0117188 -15.9509,0.0146701 -15.9648,-0.977548 0.0417535,-0.977691"/>
+   </object>
+  </objectgroup>
   <animation>
    <frame tileid="449" duration="100"/>
    <frame tileid="454" duration="100"/>
@@ -391,6 +436,11 @@
   </animation>
  </tile>
  <tile id="450">
+  <objectgroup draworder="index" id="2">
+   <object id="2" x="11" y="0.0444444">
+    <polygon points="0,0 -0.133333,9.86667 -1.53333,10.3556 -2.00234,10.9568 -10.9889,10.9556"/>
+   </object>
+  </objectgroup>
   <animation>
    <frame tileid="450" duration="100"/>
    <frame tileid="455" duration="100"/>

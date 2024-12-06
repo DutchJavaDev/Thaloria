@@ -14,6 +14,7 @@
     <None Remove="Resources\Maps\Home.tmj" />
     <None Remove="Resources\Maps\Thaloria.tmj" />
     <None Remove="Resources\Maps\water-sheet.tsj" />
+    <None Remove="Resources\Tilesets\characters.json" />
     <None Remove="Resources\Tilesets\enviroment.json" />
     <None Remove="Resources\Tilesets\water-sheet.json" />
   </ItemGroup>
@@ -24,6 +25,9 @@
     <EmbeddedResource Include="Resources\Maps\Home.tmj" />
     <EmbeddedResource Include="Resources\Maps\Thaloria.tmj" />
     <EmbeddedResource Include="Resources\Maps\water-sheet.tsj" />
+    <EmbeddedResource Include="Resources\Tilesets\characters.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Tilesets\enviroment.json" />
     <EmbeddedResource Include="Resources\Tilesets\water-sheet.json" />
   </ItemGroup>
@@ -36,6 +40,9 @@
 
   <ItemGroup>
     <None Update="Resources\Fonts\IMMORTAL.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Tilesets\characters.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\Tilesets\enviroment.png">
