@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using nkast.Aether.Physics2D.Common;
+using System.Text.Json.Serialization;
 
 namespace Thaloria.Game.Map.Tiled
 {
@@ -30,5 +31,20 @@ namespace Thaloria.Game.Map.Tiled
 
     [JsonPropertyName("y")]
     public double RelativeY { get; set; }
+
+    [JsonPropertyName("polygon")]
+    public PolygonVector[]? Polygons { get; set; }
+
+    public Vector2[]? Vertices => Polygons?.Select(i => new Vector2(i.Xf, i.Yf)).ToArray();
+  }
+
+  public sealed class PolygonVector 
+  {
+    [JsonPropertyName("x")]
+    public double X {  get; set; }
+    [JsonPropertyName("y")]
+    public double Y { get; set; }
+    public float Xf => (float) X;
+    public float Yf => (float) Y;
   }
 }
