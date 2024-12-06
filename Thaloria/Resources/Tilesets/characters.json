@@ -1,0 +1,52 @@
+{
+    "software": {
+        "name": "rTexPacker v4.0",
+        "url": "https://raylibtech.itch.io/rtexpacker"
+    },
+    "atlas": {
+        "imagePath": "characters.png",
+        "width": 2048,
+        "height": 2048,
+        "spriteCount": 4,
+        "isFont": false,
+        "fontSize": 32
+    },
+    "sprites": [
+        {
+            "nameId": "player",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 576, "y": 0 },
+            "sourceSize": { "width": 288, "height": 480 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 15, "y": 22, "width": 257, "height": 453 }
+        },
+        {
+            "nameId": "skeleton_swordless",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 0, "y": 0 },
+            "sourceSize": { "width": 288, "height": 624 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 7, "y": 21, "width": 278, "height": 595 }
+        },
+        {
+            "nameId": "slime",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 864, "y": 0 },
+            "sourceSize": { "width": 224, "height": 416 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 6, "y": 12, "width": 211, "height": 396 }
+        },
+        {
+            "nameId": "skeleton",
+            "origin": { "x": 0, "y": 0 },
+            "position": { "x": 288, "y": 0 },
+            "sourceSize": { "width": 288, "height": 624 },
+            "padding": 0,
+            "trimmed": false,
+            "trimRec": { "x": 7, "y": 21, "width": 278, "height": 595 }
+        }
+    ]
+}
