@@ -1,8 +1,10 @@
 ﻿using DefaultEcs;
-using System.Numerics;
+using Raylib_cs;
 using Thaloria.Game.ECS.Components;
 using Thaloria.Game.Helpers;
+using Thaloria.Game.Map;
 using Thaloria.Game.Map.Tiled;
+using Thaloria.Game.Npc;
 using Thaloria.Game.Physics;
 using Thaloria.Loaders;
 
@@ -21,97 +23,86 @@ namespace Thaloria.Game.ECS
       _world.SetMaxCapacity<PlayerComponent>(1);
     }
 
-    public static void SetWorldComponent<T>(T component) where T : struct
+    public static void SetWorldComponent<T>(T component)
     {
       _world.Set(component);
     }
 
     public static void SpawnNpcs(IEnumerable<TiledCollisionObject> npcs)
     {
+      var characterLoader = _world.Get<CharacterLoader>();
       foreach (var spawn in npcs)
       {
         spawn.TryGetIntProperty("npc", out var npcType);
         spawn.TryGetIntProperty("amount", out var amount);
-        CreateNpc((ThaloriaNpc)npcType,amount,spawn.Xf,spawn.Yf);
+        CreateNpc((ThaloriaNpc)npcType,amount,spawn.Xf,spawn.Yf, characterLoader);
       }
     }
 
-    private static void CreateNpc(ThaloriaNpc npcType, int amount, float x, float y)
+    private static void CreateNpc(ThaloriaNpc npcType, int amount, float x, float y, CharacterLoader characterLoader)
     {
-      switch (npcType)
+      var npc = NpcInfo.GetNpcInfo(npcType);
+
+      // TODO fix this so it gets called only once....
+      ResourceManager.LoadResourceTexture2DTileset(npc.TextureName, npc.TextureName);
+
+      for (var i = 0; i < amount; i++)
       {
-        case ThaloriaNpc.Skeleton:
-          var tilesetName = "skeleton_swordless.png";
-          // TODO fix this so it gets called only once....
-          ResourceManager.LoadResourceTexture2DTileset(tilesetName,tilesetName);
+        var entity = _world.CreateEntity();
 
-          for (int i = 0; i < amount; i++)
-          {
-            var skeleton = _world.CreateEntity();
-            skeleton.Set(new RenderComponent()
-            {
-              HasTexture = true,
-              TextureName = tilesetName,
-              TextureHeight = 48,
-              TextureWidth = 48
-            });
-
-            PhysicsWorld.Instance.CreateDynamicBody(x, y, 12, 16, skeleton.GetHashCode());
-
-            var animations = new Class.Animation[]
+        entity.Set(new RenderComponent
         {
-        new (AnimationTypes.Idle,6,0),
-        new (AnimationTypes.Walking_Right,6,4),
-        new (AnimationTypes.Walking_Left,6,4,true), // Flip option to go left
-        new (AnimationTypes.Walking_Up,6,5),
-        new (AnimationTypes.Idle_Up,6,3),
-        new (AnimationTypes.Walking_Down,6,3),
-        new (AnimationTypes.Jumping_Right,6,4,true) // Flip option to go left
-        };
+          HasTexture = true,
+          TextureName = ResourceNames.CharaterTileSet,
+          TextureWidth = npc.FrameWidth,
+          TextureHeight = npc.FrameHeight,
+        });
 
-            var animationComponent = new AnimationComponent(tilesetName, 48, 48, 0.075f, animations);
+        var animation = new AnimationComponent(characterLoader.GetCharacterRectangle(npc.TextureName), npc.FrameWidth, npc.FrameHeight, 0.075f, npc.Animations);
 
-            skeleton.Set(animationComponent);
-          }
-          break;
+        entity.Set(animation);
 
-        case ThaloriaNpc.SkeletonSword:
-          break;
+        var hitboxWidth = npc.HitBoxWidth;
+        var hitboxHeight = npc.HitBoxHeight;
 
-        case ThaloriaNpc.Slime:
-          break;
+        PhysicsWorld.Instance.CreateDynamicBody(x, y, hitboxWidth, hitboxHeight, entity.GetHashCode());
       }
     }
 
     public static void CreatePlayer(float x, float y)
     {
       var player = _world.CreateEntity();
+      var characterLoader = _world.Get<CharacterLoader>();
 
       player.Set(new PlayerComponent());
       player.Set(new RenderComponent()
       {
         HasTexture = true,
-        TextureName = ResourceNames.PlayerTileset,
-        TextureWidth = 48,
-        TextureHeight = 48,
+        TextureName = ResourceNames.CharaterTileSet,
+        TextureWidth = 48, // this will always be constant 
+        TextureHeight = 48, // this will always be constant 
+        //RenderColor = Color.Yellow
       });
 
       // Create a more efficient way if centering the body on the sprite
-      PhysicsWorld.Instance.CreateDynamicBody(x, y, 12, 16, player.GetHashCode());
+      var hitBoxWidth = 13;
+      var hitboxHeight = 21;
 
-      // Base animations
+      PhysicsWorld.Instance.CreateDynamicBody(x,y,hitBoxWidth,hitboxHeight, player.GetHashCode());
+
+      //// Base animations
       var animations = new Class.Animation[]
       {
-        new (AnimationTypes.Idle,6,0),
-        new (AnimationTypes.Walking_Right,6,4),
-        new (AnimationTypes.Walking_Left,6,4,true), // Flip option to go left
-        new (AnimationTypes.Walking_Up,6,5),
-        new (AnimationTypes.Idle_Up,6,3),
-        new (AnimationTypes.Walking_Down,6,3),
-        new (AnimationTypes.Jumping_Right,6,4,true) // Flip option to go left
+        new (AnimationTypes.Idle,5,0),
+        new (AnimationTypes.Walking_Right,5,4),
+        new (AnimationTypes.Walking_Left,5,4,true), // Flip option to go left
+        new (AnimationTypes.Walking_Up,5,5),
+        new (AnimationTypes.Idle_Up,5,3),
+        new (AnimationTypes.Walking_Down,5,3),
+        new (AnimationTypes.Jumping_Right,5,4,true) // Flip option to go left
       };
 
-      var animationComponent = new AnimationComponent(ResourceNames.PlayerTileset, 48, 48, 0.075f, animations);
+      var animationComponent = new AnimationComponent(characterLoader.GetCharacterRectangle("player"),48, 48, 0.075f, animations);
 
       player.Set(animationComponent);
     }
