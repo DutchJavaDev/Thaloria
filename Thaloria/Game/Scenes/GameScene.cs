@@ -5,11 +5,8 @@ using static Raylib_cs.Raylib;
 using Raylib_cs;
 using Thaloria.Game.ECS.Systems;
 using Thaloria.Game.ECS.Components;
-using Thaloria.Loaders;
 using System.Numerics;
-using Thaloria.Game.Helpers;
 using Thaloria.Game.Physics;
-using Thaloria.Game.ECS.Class;
 using Thaloria.Game.ECS;
 
 namespace Thaloria.Game.Scenes
@@ -18,7 +15,8 @@ namespace Thaloria.Game.Scenes
   {
     public SceneManagerEnum SceneReference => SceneManagerEnum.GameScene;
     private SceneManager? _sceneManager;
-    private readonly MapLoader Map = new("Home");
+    private readonly MapLoader Map = new("Thaloria");
+    private readonly CharacterLoader CharacterLoader = new();
     private readonly int gameScreenWidth = 640;
     private readonly int gameScreenHeight = 480;
 
@@ -31,10 +29,10 @@ namespace Thaloria.Game.Scenes
 
     public Task DisposeAsync()
     {
-      //PhysicsWorld.Instance.Dispose();
+      PhysicsWorld.Instance.Dispose();
       sequentialUpdateSystems?.Dispose();
       sequentialRenderSystems?.Dispose();
-      //EcsCreation.Instance.Dispose();
+      EcsCreation.Instance.Dispose();
       UnloadRenderTexture(RenderTexture2D);
       return Task.CompletedTask;
     }
@@ -48,11 +46,13 @@ namespace Thaloria.Game.Scenes
     {
       await Map.LoadMap();
 
-      ResourceManager.LoadResourceTexture2DTileset(ResourceNames.PlayerTileset, "player.png");
+      await CharacterLoader.LoadCharacters();
+
+      EcsCreation.SetWorldComponent(CharacterLoader);
 
       RenderTexture2D = LoadRenderTexture(gameScreenWidth, gameScreenHeight);
 
-      var playerSpawn = Map.GetTileCollisionObjectByName("player_spawn");
+      var playerSpawn = Map.GetObjectByName("player_spawn");
 
       EcsCreation.CreatePlayer(playerSpawn.Xf, playerSpawn.Yf);
 
