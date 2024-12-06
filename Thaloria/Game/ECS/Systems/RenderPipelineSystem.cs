@@ -31,7 +31,7 @@ namespace Thaloria.Game.ECS.Systems
         hasTexture = true,
         Position = i.RenderPosition,
         TexturePosition = i.HasAnimation ? i.RenderFrames[0] : i.TexturePosition,
-        YIndex = (int)(i.RenderPosition.Y + i.TexturePosition.Height),
+        YIndex = (int)(i.RenderPosition.Y + (i.HasAnimation ? i.RenderFrames[0].Height : i.TexturePosition.Height)),
         TextureName = i.TextureName,
         isStatic = true, // ??? 
         HasAnimation = i.HasAnimation,
@@ -82,16 +82,16 @@ namespace Thaloria.Game.ECS.Systems
         // center on sprite
 
         // This is a buf that is fixed with this crazy if statement lol..
-        //if (renderComponent.TextureWidth == 48)
-        //{
-        //  position.X -= renderComponent.TextureWidth / 2;
-        //  position.Y -= renderComponent.TextureHeight / 1.5f;
-        //}
-        //else
-        //{
-        //  position.X -= renderComponent.TextureWidth / 2;
-        //  position.Y -= renderComponent.TextureHeight / 2;
-        //}
+        if (renderComponent.TextureWidth == 48)
+        {
+          position.X -= renderComponent.TextureWidth / 2;
+          position.Y -= renderComponent.TextureHeight / 1.5f;
+        }
+        else
+        {
+          position.X -= renderComponent.TextureWidth / 2;
+          position.Y -= renderComponent.TextureHeight / 2;
+        }
 
         var frameX = 0f;
         var frameY = 0f;
