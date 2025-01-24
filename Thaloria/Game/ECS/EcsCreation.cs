@@ -1,5 +1,6 @@
 ﻿using DefaultEcs;
 using Raylib_cs;
+using Thaloria.Game.ECS.Class;
 using Thaloria.Game.ECS.Components;
 using Thaloria.Game.Helpers;
 using Thaloria.Game.Map;
@@ -21,6 +22,7 @@ namespace Thaloria.Game.ECS
       _world = new World();
       _world.SetMaxCapacity<CameraComponent>(1);
       _world.SetMaxCapacity<PlayerComponent>(1);
+      _world.SetMaxCapacity<CharacterLoader>(1);
     }
 
     public static void SetWorldComponent<T>(T component)
@@ -44,7 +46,7 @@ namespace Thaloria.Game.ECS
       var npc = NpcInfo.GetNpcInfo(npcType);
 
       // TODO fix this so it gets called only once....
-      ResourceManager.LoadResourceTexture2DTileset(npc.TextureName, npc.TextureName);
+      //ResourceManager.LoadResourceTexture2DTileset(npc.TextureName, npc.TextureName);
 
       for (var i = 0; i < amount; i++)
       {
@@ -58,14 +60,26 @@ namespace Thaloria.Game.ECS
           TextureHeight = npc.FrameHeight,
         });
 
-        var animation = new AnimationComponent(characterLoader.GetCharacterRectangle(npc.TextureName), npc.FrameWidth, npc.FrameHeight, 0.075f, npc.Animations);
+        var rectangle = characterLoader.GetCharacterRectangle(npc.TextureName);
+
+        var animation = new AnimationComponent(rectangle, npc.FrameWidth, npc.FrameHeight, 0.075f, npc.Animations);
 
         entity.Set(animation);
 
         var hitboxWidth = npc.HitBoxWidth;
         var hitboxHeight = npc.HitBoxHeight;
 
-        PhysicsWorld.Instance.CreateDynamicBody(x, y, hitboxWidth, hitboxHeight, entity.GetHashCode());
+        var tag = new TagObject 
+        {
+          EntityTag = entity.GetHashCode(),
+          Name = npcType.ToString(),
+        };
+
+        //tag.Data[i] = animation;
+
+        //entity.Set(tag);
+
+        PhysicsWorld.Instance.CreateDynamicBody(x, y, hitboxWidth, hitboxHeight, tag, CollisionResolver.GetNpcOnCollisionEventHandler((int)npcType));
       }
     }
 
@@ -81,14 +95,20 @@ namespace Thaloria.Game.ECS
         TextureName = ResourceNames.CharaterTileSet,
         TextureWidth = 48, // this will always be constant 
         TextureHeight = 48, // this will always be constant 
-        //RenderColor = Color.Yellow
+        RenderColor = Color.Yellow
       });
 
       // Create a more efficient way if centering the body on the sprite
       var hitBoxWidth = 13;
       var hitboxHeight = 21;
 
-      PhysicsWorld.Instance.CreateDynamicBody(x,y,hitBoxWidth,hitboxHeight, player.GetHashCode());
+      var tag = new TagObject 
+      {
+        EntityTag = player.GetHashCode(),
+        Name = "player"
+      };
+
+      PhysicsWorld.Instance.CreateDynamicBody(x,y,hitBoxWidth,hitboxHeight, tag, CollisionResolver.GetNpcOnCollisionEventHandler(0));
 
       //// Base animations
       var animations = new Class.Animation[]

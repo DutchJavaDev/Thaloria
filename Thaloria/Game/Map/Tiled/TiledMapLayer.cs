@@ -19,8 +19,8 @@ namespace Thaloria.Game.Map.Tiled
     //[JsonPropertyName("opacity")]
     //public int Opacity { get; set; }
 
-    //[JsonPropertyName("type")]
-    //public string Type { get; set; }
+    [JsonPropertyName("type")]
+    public string Type { get; set; }
 
     //[JsonPropertyName("visible")]
     //public bool Visible { get; set; }

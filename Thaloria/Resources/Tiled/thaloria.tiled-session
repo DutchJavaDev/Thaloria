@@ -8,16 +8,16 @@
     ],
     "fileStates": {
         "Thaloria.tmx": {
-            "scale": 2,
-            "selectedLayer": 3,
+            "scale": 3,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 231.25,
-                "y": 87.75
+                "x": 525,
+                "y": 54.833333333333314
             }
         },
         "enviroment.tsx": {
-            "scaleInDock": 2,
-            "scaleInEditor": 3
+            "scaleInDock": 5.5,
+            "scaleInEditor": 5.5
         }
     },
     "frame.defaultDuration": 100,
@@ -31,14 +31,14 @@
     "map.tileWidth": 16,
     "map.width": 10,
     "openFiles": [
-        "Thaloria.tmx",
-        "enviroment.tsx"
+        "enviroment.tsx",
+        "Thaloria.tmx"
     ],
     "project": "thaloria.tiled-project",
     "property.type": "int",
     "recentFiles": [
-        "Thaloria.tmx",
-        "enviroment.tsx"
+        "enviroment.tsx",
+        "Thaloria.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using nkast.Aether.Physics2D.Common;
+using System.Text.Json.Serialization;
 
 namespace Thaloria.Game.Map.Tiled
 {
@@ -36,6 +37,11 @@ namespace Thaloria.Game.Map.Tiled
 
     [JsonIgnore]
     public float Yf => (float)Y;
+
+    [JsonPropertyName("polygon")]
+    public PolygonVector[]? Polygons { get; set; }
+
+    public Vector2[]? Vertices => Polygons?.Select(i => new Vector2(i.Xf, i.Yf)).ToArray();
 
     [JsonPropertyName("properties")]
     public List<TiledMapTileProperty>? Properties { get; set; }

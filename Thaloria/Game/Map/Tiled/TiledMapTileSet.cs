@@ -9,8 +9,5 @@ namespace Thaloria.Game.Map.Tiled
 
     [JsonPropertyName("source")]
     public string Source { get; set; }
-
-    [JsonIgnore]
-    public bool Loaded { get; set; }
   }
 }

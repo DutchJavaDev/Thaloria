@@ -7,6 +7,8 @@ using Thaloria.Game.Map;
 using Thaloria.Game.Physics;
 using Thaloria.Loaders;
 using DefaultEcs;
+using Thaloria.Game.Helpers;
+using Thaloria.Game.ECS.Class;
 
 namespace Thaloria.Game.ECS.Systems
 {
@@ -19,14 +21,24 @@ namespace Thaloria.Game.ECS.Systems
     private float ElapsedTime = 0f;
     private readonly float UpdateTime = 0.145f;
     private bool UpdateFrames = false;
+    private Font _imortalFont;
 
     public RenderPipelineSystem(World world, TileData[] tileData) 
     {
       _world = world;
+      _imortalFont = ResourceManager.GetFont(ResourceNames.ImmortalFont);
+      var fixedAnimations = tileData.Where(i => i.FixedAnimation).ToDictionary(i => i.TileGuid, i => false);
+
+      foreach (var animation in fixedAnimations) 
+      {
+        ThaloriaStatic.FixedAnimations.Add(animation.Key, animation.Value);
+      }
+
       yIndexItems = tileData.Select(i => new YIndexItem 
       {
-        // If i ever need the tile id for some reason then I have to fix this...
-        Id = i.TileId * i.TileId, // :)
+        LayerId = i.LayerId,
+        // If i ever need the tile id for some reason then I have to fix this...4
+        Id = i.TileId * i.TileId + 1000, // :)
         isPlayer = false,
         hasTexture = true,
         Position = i.RenderPosition,
@@ -36,8 +48,8 @@ namespace Thaloria.Game.ECS.Systems
         isStatic = true, // ??? 
         HasAnimation = i.HasAnimation,
         AnimationFrames = i.HasAnimation ? i.RenderFrames : default,
-        Guid = i.guid
-
+        Guid = i.TileGuid,
+        FixedAnimation = i.FixedAnimation
       }).ToList();
 
       // TODO needs testing
@@ -76,7 +88,7 @@ namespace Thaloria.Game.ECS.Systems
 
         ref RenderComponent renderComponent = ref entity.Get<RenderComponent>();
 
-        var physicsBody = PhysicsWorld.Instance.GetBodyByTag(id);
+        var physicsBody = PhysicsWorld.Instance.GetBodyByEntityTag(id);
         var position = physicsBody.Position;
 
         // center on sprite
@@ -102,10 +114,10 @@ namespace Thaloria.Game.ECS.Systems
           ref AnimationComponent animationComponent = ref entity.Get<AnimationComponent>();
           var frame = animationComponent.GetFramePosition();
           frameX = frame.X;
-          frameY = frame.Y;
+          frameY = frame.Y; 
           flipTexture = animationComponent.IsFlipped();
         }
-        
+
         var yIndexId = yIndexItems.FindIndex(i => i.Id == id);
 
         if (yIndexId == -1) 
@@ -146,16 +158,24 @@ namespace Thaloria.Game.ECS.Systems
         UpdateFrames = true;
       }
 
-
       // refactor this, make it more readable
       if (UpdateFrames) 
       {
         // Update animated tiles
-        var animatedTilesIds = yIndexItems.Where(i => i.HasAnimation).Select(i => i.Guid).ToList();
+        var animatedTiles = yIndexItems.Where(i => i.HasAnimation).ToList();
 
-        foreach (var animatedTileId in animatedTilesIds)
+        foreach (var animatedTile in animatedTiles)
         {
-          var index = yIndexItems.FindIndex(i => i.Guid == animatedTileId);
+
+          if (animatedTile.FixedAnimation)
+          {
+            if (!ThaloriaStatic.FixedAnimations[animatedTile.Guid])
+            {
+              continue;
+            }
+          }
+
+          var index = yIndexItems.FindIndex(i => i.Guid == animatedTile.Guid);
 
           var yindexItem = yIndexItems[index];
 
@@ -164,9 +184,20 @@ namespace Thaloria.Game.ECS.Systems
 
           frame++;
 
-          if (frame > yindexItem.AnimationFrames.Length - 1)
+          if (animatedTile.FixedAnimation) 
           {
-            frame = 0;
+            if (frame > yindexItem.AnimationFrames.Length - 1)
+            {
+              frame = 0;
+            }
+            ThaloriaStatic.FixedAnimations[animatedTile.Guid] = false;
+          }
+          else
+          {
+            if (frame > yindexItem.AnimationFrames.Length - 1)
+            {
+              frame = 0;
+            }
           }
 
           yindexItem.AnimationFrame = frame;
@@ -178,7 +209,12 @@ namespace Thaloria.Game.ECS.Systems
       }
 
       // Sort on yindex
-      yIndexItems.Sort((a, b) => a.YIndex.CompareTo(b.YIndex));
+      yIndexItems.Sort((a,b) => 
+      {
+        // always render items on layer 5 first or atleast before the player
+        int layerComparison = (a.LayerId == 5 ? 0 : 1).CompareTo(b.LayerId == 5 ? 0 : 1);
+        return layerComparison != 0 ? layerComparison : a.YIndex.CompareTo(b.YIndex); ;
+      });
     }
 
     public override void Render(float state)
@@ -225,7 +261,8 @@ namespace Thaloria.Game.ECS.Systems
     }
   }
 
-  struct YIndexItem(int Id, 
+  struct YIndexItem(int layer,
+                    int Id, 
                     int yIndex, 
                     bool isPlayer, 
                     bool hasTexture, 
@@ -237,8 +274,10 @@ namespace Thaloria.Game.ECS.Systems
                     bool flipTextue = false,
                     bool animation = false,
                     Rectangle[] animationFrames = default,
-                    Guid uniqueid = default)
+                    Guid uniqueid = default,
+                    bool fixedAnimation = default)
   {
+    public int LayerId = layer;
     public int Id = Id;
     public int YIndex = yIndex;
     public bool isPlayer = isPlayer;
@@ -253,6 +292,7 @@ namespace Thaloria.Game.ECS.Systems
     public Rectangle[] AnimationFrames = animationFrames;
     public int AnimationFrame = 0;
     public Guid Guid = uniqueid;
+    public bool FixedAnimation = fixedAnimation;
     public readonly Rectangle Bounds => new(Position.X,Position.Y,TexturePosition.Width,TexturePosition.Height);
   }
 }

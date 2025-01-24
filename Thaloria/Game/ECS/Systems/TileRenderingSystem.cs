@@ -13,7 +13,7 @@ namespace Thaloria.Game.ECS.Systems
     public bool IsEnabled { get; set; }
     private readonly TileData[] Tiles = tiles;
     private readonly Dictionary<Guid, int> AnimationFrameDictionary = tiles.Where(i => i.HasAnimation)
-      .Select(i => new { Id = i.guid, Frame = 0 })
+      .Select(i => new { Id = i.TileGuid, Frame = 0 })
       .ToDictionary(i => i.Id, i => i.Frame);
 
     private float ElapsedTime = 0f;
@@ -48,7 +48,7 @@ namespace Thaloria.Game.ECS.Systems
         {
           if (tile.HasAnimation)
           {
-            var frameIndex = AnimationFrameDictionary[tile.guid];
+            var frameIndex = AnimationFrameDictionary[tile.TileGuid];
 
             if (UpdateFrames) 
             {
@@ -59,7 +59,7 @@ namespace Thaloria.Game.ECS.Systems
                 frameIndex = 0;
               }
 
-              AnimationFrameDictionary[tile.guid] = frameIndex;
+              AnimationFrameDictionary[tile.TileGuid] = frameIndex;
             }
             DrawTextureRec(ResourceManager.GetTexture2DTileset(tile.TextureName), tile.RenderFrames[frameIndex], tile.RenderPosition, Color.White);
           }

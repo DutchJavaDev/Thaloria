@@ -34,21 +34,44 @@ namespace Thaloria.Game.ECS.Systems
           
           foreach (var fixture in fixtures) 
           {
-            if (fixture.Shape is PolygonShape shape) 
+            // TODO refactor
+            switch (fixture.Shape.ShapeType)
             {
-              var verticies = shape.Vertices;
+              case ShapeType.Circle: break;
+              case ShapeType.Polygon:
+                {
+                  var verticies = ((PolygonShape)fixture.Shape).Vertices;
 
-              for (int i = 0; i < verticies.Count; i++)
-              {
-                var startPoint = body.GetWorldPoint(verticies[i]);
-                var endPoint = body.GetWorldPoint(verticies[(i + 1) % verticies.Count]);
+                  for (int i = 0; i < verticies.Count; i++)
+                  {
+                    var startPoint = body.GetWorldPoint(verticies[i]);
+                    var endPoint = body.GetWorldPoint(verticies[(i + 1) % verticies.Count]);
 
-                Vector2 start = new(startPoint.X, startPoint.Y);
-                Vector2 end = new(endPoint.X, endPoint.Y); // Connect last vertex to the first
+                    Vector2 start = new(startPoint.X, startPoint.Y);
+                    Vector2 end = new(endPoint.X, endPoint.Y); // Connect last vertex to the first
 
-                // Draw line segment between consecutive vertices with specified thickness
-                DrawLineEx(start, end, Thickness, Color);
-              }
+                    // Draw line segment between consecutive vertices with specified thickness
+                    DrawLineEx(start, end, Thickness, Color);
+                  }
+                }
+                break;
+              case ShapeType.Chain:
+                {
+                  var verticies = ((ChainShape)fixture.Shape).Vertices;
+
+                  for (int i = 0; i < verticies.Count; i++)
+                  {
+                    var startPoint = body.GetWorldPoint(verticies[i]);
+                    var endPoint = body.GetWorldPoint(verticies[(i + 1) % verticies.Count]);
+
+                    Vector2 start = new(startPoint.X, startPoint.Y);
+                    Vector2 end = new(endPoint.X, endPoint.Y); // Connect last vertex to the first
+
+                    // Draw line segment between consecutive vertices with specified thickness
+                    DrawLineEx(start, end, Thickness, Color);
+                  }
+                }
+                break;
             }
           }
         }

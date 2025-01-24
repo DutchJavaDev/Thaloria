@@ -26,6 +26,34 @@
    <property name="parent_id" type="int" value="21"/>
   </properties>
  </tile>
+ <tile id="24">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="7.03125" y="15.9375">
+    <polygon points="-0.03125,0.0664063 2.97795,0.0549479 2.98064,-13.9551 -0.0417535,-13.9556"/>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="25">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="15.8261" y="6.91304">
+    <polygon points="0.171875,0.0742188 -10.8256,0.100543 -10.8207,4.11141 -8.82609,4.1143 -8.82609,9.08152 -5.81752,9.08072 -5.82512,4.04372 0.188889,4.05556"/>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="26">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0.173913" y="7.04348">
+    <polygon points="-0.16276,-0.0543403 15.8295,-0.046875 15.8285,3.90523 9.82065,3.91304 9.82065,8.97113 6.82948,8.95109 6.81726,3.90082 -0.179601,3.96576"/>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="27">
+  <objectgroup draworder="index" id="2">
+   <object id="2" x="0.15625" y="7">
+    <polygon points="-0.109375,-0.015625 6.86719,-0.000173611 6.875,-5.03906 9.85851,-5.01563 9.85938,8.97656 6.84375,8.96094 6.83611,3.97639 -0.164063,3.99219"/>
+   </object>
+  </objectgroup>
+ </tile>
  <tile id="46">
   <objectgroup draworder="index" id="2">
    <object id="1" x="4.04444" y="7.02222">
@@ -63,6 +91,13 @@
    <property name="parent_id" type="int" value="21"/>
   </properties>
  </tile>
+ <tile id="56">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="6.99609" y="0.0195313">
+    <polygon points="0.000434028,-0.0228299 0.0136285,15.9707 3.00781,15.9669 3.00495,-0.00512153"/>
+   </object>
+  </objectgroup>
+ </tile>
  <tile id="82">
   <properties>
    <property name="parent_id" type="int" value="18"/>
@@ -93,6 +128,20 @@
    <property name="parent_id" type="int" value="21"/>
   </properties>
  </tile>
+ <tile id="88">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="7" y="0.15625">
+    <polygon points="-0.00390625,-0.148438 0,13.8477 3.01172,13.8555 2.99609,-0.128906"/>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="91">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0.133333" y="6.86667">
+    <polygon points="-0.116667,0.111111 6.88889,0.122222 6.86667,-6.84444 9.87222,-6.85 9.86667,7.10556 6.87778,7.1 6.88889,4.1 -0.138889,4.13333"/>
+   </object>
+  </objectgroup>
+ </tile>
  <tile id="114">
   <properties>
    <property name="parent_id" type="int" value="18"/>
@@ -122,6 +171,27 @@
   <properties>
    <property name="parent_id" type="int" value="21"/>
   </properties>
+ </tile>
+ <tile id="121">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="16.087" y="7.04348">
+    <polygon points="-0.078125,-0.0546875 -11.1017,-0.0421196 -11.0802,3.90914 -0.0879755,3.93054"/>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="122">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0.1875" y="7.0625">
+    <polygon points="-0.171875,-0.09375 15.8047,-0.101563 15.8047,3.91406 -0.171875,3.90625"/>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="123">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0.0888889" y="6.93333">
+    <polygon points="-0.0859375,0.0703125 11.9216,0.046875 11.9174,4.04957 -0.0810764,4.052"/>
+   </object>
+  </objectgroup>
  </tile>
  <tile id="256" type="tree_flowers_height"/>
  <tile id="257">
@@ -462,6 +532,13 @@
    <property name="parent_id" type="int" value="487"/>
   </properties>
  </tile>
+ <tile id="497">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="2.04026" y="2.06026">
+    <polygon points="0,0 -0.0200025,12.0015 11.9815,11.9815 12.0215,-0.040005"/>
+   </object>
+  </objectgroup>
+ </tile>
  <tile id="504" type="tree_stomp_short"/>
  <tile id="505">
   <properties>
@@ -505,6 +582,13 @@
   <properties>
    <property name="parent_id" type="int" value="487"/>
   </properties>
+ </tile>
+ <tile id="535">
+  <objectgroup draworder="index" id="2">
+   <object id="2" x="1.0625" y="1">
+    <polygon points="-0.0664063,-0.0078125 13.9414,-0.015625 13.9375,10.9883 -0.0625,11"/>
+   </object>
+  </objectgroup>
  </tile>
  <tile id="536">
   <properties>
@@ -579,6 +663,36 @@
   <properties>
    <property name="parent_id" type="int" value="589"/>
   </properties>
+ </tile>
+ <tile id="592">
+  <properties>
+   <property name="fixed_animation" type="bool" value="true"/>
+   <property name="object_name" value="door"/>
+  </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" name="door_collider" x="2.09375" y="3.0625">
+    <polygon points="-0.0501736,-0.0666667 -0.0555556,0.9375 11.9102,0.933594 11.9102,-0.078125"/>
+   </object>
+  </objectgroup>
+  <animation>
+   <frame tileid="592" duration="100"/>
+   <frame tileid="593" duration="100"/>
+  </animation>
+ </tile>
+ <tile id="594">
+  <properties>
+   <property name="fixed_animation" type="bool" value="true"/>
+   <property name="object_name" value="door"/>
+  </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="3" name="door_collider" x="2.01563" y="2.9375">
+    <polygon points="-0.0117188,0.046875 -0.0273438,1.05859 11.9922,1.05859 12,0.046875"/>
+   </object>
+  </objectgroup>
+  <animation>
+   <frame tileid="594" duration="100"/>
+   <frame tileid="595" duration="100"/>
+  </animation>
  </tile>
  <tile id="596" type="log_short"/>
  <tile id="597">

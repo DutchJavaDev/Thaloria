@@ -14,7 +14,7 @@ namespace Thaloria.Game.ECS.Systems
     {
       ref CameraComponent cameraComponent = ref World.Get<CameraComponent>();
 
-      var body = PhysicsWorld.Instance.GetBodyByTag(entity.GetHashCode());
+      var body = PhysicsWorld.Instance.GetBodyByEntityTag(entity.GetHashCode());
 
       // Future me add feature that whatever you click becomes the target?
 

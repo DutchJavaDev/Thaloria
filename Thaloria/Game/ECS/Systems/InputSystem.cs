@@ -16,7 +16,7 @@ namespace Thaloria.Game.ECS.Systems
 
     protected override void Update(float state, in Entity entity)
     {
-      var body = PhysicsWorld.Instance.GetBodyByTag(entity.GetHashCode());
+      var body = PhysicsWorld.Instance.GetBodyByEntityTag(entity.GetHashCode());
       ref var animationController = ref entity.Get<AnimationComponent>();
       var velocity = _speed * state;
 
