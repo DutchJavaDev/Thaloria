@@ -1,5 +1,4 @@
 ﻿using Thaloria.Game.Interface;
-using Thaloria.Game.Map;
 using DefaultEcs.System;
 using static Raylib_cs.Raylib;
 using Raylib_cs;
@@ -8,6 +7,7 @@ using Thaloria.Game.ECS.Components;
 using System.Numerics;
 using Thaloria.Game.Physics;
 using Thaloria.Game.ECS;
+using Thaloria.Loaders;
 
 namespace Thaloria.Game.Scenes
 {

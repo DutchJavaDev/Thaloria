@@ -1,17 +1,18 @@
-﻿using Raylib_cs;
-using System.Numerics;
+﻿using System.Numerics;
+using Raylib_cs;
 using Thaloria.Game.ECS.Class;
-using Thaloria.Game.Map.Tiled;
 using Thaloria.Game.Physics;
-using Thaloria.Loaders;
+using Thaloria.Loaders.Tiled;
 
-namespace Thaloria.Game.Map
+namespace Thaloria.Loaders
 {
   public sealed class MapLoader(string mapName)
   {
     private static readonly string TileLayerName = "tilelayer";
     private static readonly string CollisionLayerObjectsName = "collision";
     private static readonly string ObjectsLayerName = "objects";
+    
+    // ??????
     private static readonly string MapFileExtension = ".tmj";
     private static readonly string TilesetFileExtension = ".tsj";
 

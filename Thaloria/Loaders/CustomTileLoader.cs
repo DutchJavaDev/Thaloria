@@ -1,8 +1,8 @@
-﻿using Raylib_cs;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Text.Json.Serialization;
+using Raylib_cs;
 
-namespace Thaloria.Game.Map
+namespace Thaloria.Loaders
 {
   public sealed class CustomTileLoader
   {

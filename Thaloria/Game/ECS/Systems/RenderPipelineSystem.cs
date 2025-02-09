@@ -3,7 +3,6 @@ using Raylib_cs;
 using System.Numerics;
 using Thaloria.Game.Abstract;
 using Thaloria.Game.ECS.Components;
-using Thaloria.Game.Map;
 using Thaloria.Game.Physics;
 using Thaloria.Loaders;
 using DefaultEcs;

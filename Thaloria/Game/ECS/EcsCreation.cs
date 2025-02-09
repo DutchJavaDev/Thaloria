@@ -3,11 +3,10 @@ using Raylib_cs;
 using Thaloria.Game.ECS.Class;
 using Thaloria.Game.ECS.Components;
 using Thaloria.Game.Helpers;
-using Thaloria.Game.Map;
-using Thaloria.Game.Map.Tiled;
 using Thaloria.Game.Npc;
 using Thaloria.Game.Physics;
 using Thaloria.Loaders;
+using Thaloria.Loaders.Tiled;
 
 namespace Thaloria.Game.ECS
 {

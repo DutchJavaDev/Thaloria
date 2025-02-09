@@ -1,7 +1,7 @@
-﻿using nkast.Aether.Physics2D.Common;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+using nkast.Aether.Physics2D.Common;
 
-namespace Thaloria.Game.Map.Tiled
+namespace Thaloria.Loaders.Tiled
 {
   public sealed class TiledMapTileCollisionObject
   {

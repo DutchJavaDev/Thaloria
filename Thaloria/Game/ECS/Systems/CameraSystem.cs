@@ -2,8 +2,8 @@
 using DefaultEcs.System;
 using Thaloria.Game.ECS.Components;
 using Thaloria.Game.Helpers;
-using Thaloria.Game.Map;
 using Thaloria.Game.Physics;
+using Thaloria.Loaders;
 
 namespace Thaloria.Game.ECS.Systems
 {

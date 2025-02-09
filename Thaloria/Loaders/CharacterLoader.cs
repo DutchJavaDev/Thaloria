@@ -1,10 +1,8 @@
-﻿using Raylib_cs;
-using System.Reflection;
-using System.Text.Json;
+﻿using System.Reflection;
+using Raylib_cs;
 using Thaloria.Game.Helpers;
-using Thaloria.Loaders;
 
-namespace Thaloria.Game.Map
+namespace Thaloria.Loaders
 {
   public sealed class CharacterLoader
   {

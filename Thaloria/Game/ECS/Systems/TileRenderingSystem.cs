@@ -2,7 +2,6 @@
 using DefaultEcs.System;
 using Raylib_cs;
 using Thaloria.Game.ECS.Components;
-using Thaloria.Game.Map;
 using Thaloria.Loaders;
 using static Raylib_cs.Raylib;
 

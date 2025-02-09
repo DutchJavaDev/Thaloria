@@ -65,6 +65,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Game\World\" />
     <Folder Include="TextureOutput\" />
     <Folder Include="Resources\Tiled\" />
   </ItemGroup>

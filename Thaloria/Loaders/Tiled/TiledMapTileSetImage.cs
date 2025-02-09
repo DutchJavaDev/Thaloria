@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Thaloria.Game.Map.Tiled
+namespace Thaloria.Loaders.Tiled
 {
   public sealed class TiledMapTileSetImage
   {
