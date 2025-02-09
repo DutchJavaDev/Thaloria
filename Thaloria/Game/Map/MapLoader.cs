@@ -1,9 +1,6 @@
 ﻿using Raylib_cs;
 using System.Numerics;
-using System.Reflection;
-using System.Text.Json;
 using Thaloria.Game.ECS.Class;
-using Thaloria.Game.Helpers;
 using Thaloria.Game.Map.Tiled;
 using Thaloria.Game.Physics;
 using Thaloria.Loaders;
@@ -48,11 +45,11 @@ namespace Thaloria.Game.Map
     }
     public async Task LoadMap()
     {
-      if (Layers is null || Layers.Count == 0)
+      if (Layers.Count == 0)
       {
-        var mapResourcePath = CreateResourcePath("Maps", $"{mapName}{MapFileExtension}");
+        var mapResourcePath = AssemblyDataLoader.CreateMapResourcePath($"{mapName}{MapFileExtension}");
 
-        tiledMap = await DeserilizeResouceFromStream<TiledMap>(mapResourcePath);
+        tiledMap = await AssemblyDataLoader.DeserilizeResouceFromStream<TiledMap>(mapResourcePath);
 
         MapWidth = tiledMap.Width * tiledMap.Tilewidth;
         MapHeight = tiledMap.Height * tiledMap.Tileheight;
@@ -75,19 +72,22 @@ namespace Thaloria.Game.Map
     {
       var tilesetName = tileset.Source.Trim().Split(@"../Tiled/")[1].Split('.')[0];
 
-      var tileSetResourcePath = CreateResourcePath("Maps", $"{tilesetName}{TilesetFileExtension}");
+      var tileSetResourcePath = AssemblyDataLoader.CreateMapResourcePath($"{tilesetName}{TilesetFileExtension}");
 
-      var tileSetImage = await DeserilizeResouceFromStream<TiledMapTileSetImage>(tileSetResourcePath);
+      var tileSetImage = await AssemblyDataLoader.DeserilizeResouceFromStream<TiledMapTileSetImage>(tileSetResourcePath);
 
-      TileSetImageWidth = tileSetImage.Imagewidth;
-      TileSetImageHeight = tileSetImage.Imageheight;
-      ImageName = tileSetImage.ImageName.Trim().Split(@"../Tilesets/")[1];
-      TileCollisionData = tileSetImage.Tiles;
+      if (tileSetImage != null)
+      {
+        TileSetImageWidth = tileSetImage.Imagewidth;
+        TileSetImageHeight = tileSetImage.Imageheight;
+        ImageName = tileSetImage.ImageName.Trim().Split(@"../Tilesets/")[1];
+        TileCollisionData = tileSetImage.Tiles;
+      }
 
       // Load TileAtlas data
-      var tileAtlasPath = CreateResourcePath("Tilesets", $"{ImageName.Split('.')[0]}.json");
-      var tileAtlas = await DeserilizeResouceFromStream<TileAtlas>(tileAtlasPath);
-      CustomTileLoader.LoadAtlasData(tileAtlas);
+      var tileAtlasPath = AssemblyDataLoader.CreateTilesetResourcePath($"{ImageName.Split('.')[0]}.json");
+      var tileAtlas = await AssemblyDataLoader.DeserilizeResouceFromStream<TileAtlas>(tileAtlasPath);
+      if (tileAtlas != null) CustomTileLoader.LoadAtlasData(tileAtlas);
 
       ResourceManager.LoadResourceTexture2DTileset(ImageName, ImageName);
     }
@@ -125,23 +125,30 @@ namespace Thaloria.Game.Map
             if (tileMetaData.HasAnimation)
             {
               var frameIds = tileMetaData?.Animations?.Select(i => i.TileId).ToArray();
-              
-              var frames = frameIds.Select(id => new Rectangle 
+
+              if (frameIds != null)
               {
-                Position = GetTexturePosition(id + 1, TileWidth, TileHeight, TileSetImageWidth),
-                Width = TileWidth, 
-                Height = TileHeight,
-              }).ToArray();
+                var frames = frameIds.Select(id => new Rectangle 
+                {
+                  Position = GetTexturePosition(id + 1, TileWidth, TileHeight, TileSetImageWidth),
+                  Width = TileWidth, 
+                  Height = TileHeight,
+                }).ToArray();
 
-              var renderPosition = new Vector2(xposition,yposition);
+                var renderPosition = new Vector2(xposition,yposition);
 
-              _ = tileMetaData.TryGetBoolProperty("fixed_animation", out bool fixedAnimation);
+                if (tileMetaData != null)
+                {
+                  _ = tileMetaData.TryGetBoolProperty("fixed_animation", out bool fixedAnimation);
 
-              var tile = new TileData(layer.Id, tileId, new(), renderPosition, ImageName, true, frames, fixedAnimation);
+                  var tile = new TileData(layer.Id, tileId, new(), renderPosition, ImageName, true, frames, fixedAnimation);
               
-              TileData.Add(tile);
+                  TileData.Add(tile);
               
-              AddCollisionBodies(tileId, xposition, yposition, tile.TileGuid);
+                  AddCollisionBodies(tileId, xposition, yposition, tile.TileGuid);
+                }
+              }
+
               continue;
             }
 
@@ -259,18 +266,6 @@ namespace Thaloria.Game.Map
       int y = row * tileHeight;
 
       return new(x, y);
-    }
-    private static async Task<T?> DeserilizeResouceFromStream<T>(string path) where T : class
-    {
-      using var resourceStream = Program.CurrentAssembly.GetManifestResourceStream(path);
-
-      using var resourceStreamReader = new StreamReader(resourceStream);
-
-      return JsonSerializer.Deserialize<T>(await resourceStreamReader?.ReadToEndAsync());
-    }
-    private static string CreateResourcePath(string mapName, string name)
-    {
-      return $"Thaloria.Resources.{mapName}.{name}";
     }
   }
   /// Tiled class data
