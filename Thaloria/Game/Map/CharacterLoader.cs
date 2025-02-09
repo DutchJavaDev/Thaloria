@@ -13,9 +13,9 @@ namespace Thaloria.Game.Map
     private readonly CustomTileLoader CustomTileLoader = new();
     public async Task LoadCharacters()
     {
-      var path = CreateResourcePath("Tilesets","characters.json");
+      var path = AssemblyDataLoader.CreateTilesetResourcePath("characters.json");
 
-      var characterAtlas = await DeserilizeResouceFromStream<TileAtlas>(path);
+      var characterAtlas = await AssemblyDataLoader.DeserilizeResouceFromStream<TileAtlas>(path);
 
       CustomTileLoader.LoadAtlasData(characterAtlas);
 
@@ -23,18 +23,5 @@ namespace Thaloria.Game.Map
     }
 
     public Rectangle GetCharacterRectangle(string name) => CustomTileLoader.GetRectangle(name);
-
-    private static async Task<T?> DeserilizeResouceFromStream<T>(string path) where T : class
-    {
-      using var resourceStream = CurrentAssembly.GetManifestResourceStream(path);
-
-      using var resourceStreamReader = new StreamReader(resourceStream);
-
-      return JsonSerializer.Deserialize<T>(await resourceStreamReader?.ReadToEndAsync());
-    }
-    private static string CreateResourcePath(string mapName , string name)
-    {
-      return $"Thaloria.Resources.{mapName}.{name}";
-    }
   }
 }
