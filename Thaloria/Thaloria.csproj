@@ -30,38 +30,37 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Tilesets\enviroment.json" />
     <EmbeddedResource Include="Resources\Tilesets\water-sheet.json" />
+    <None Remove="Resources\Tilesets\enviroment.png" />
+    <EmbeddedResource Include="Resources\Tilesets\enviroment.png" />
+    <None Remove="Resources\Fonts\IMMORTAL.ttf" />
+    <EmbeddedResource Include="Resources\Fonts\IMMORTAL.ttf" />
+    <None Remove="Resources\Tiled\water-sheet.tsx" />
+    <EmbeddedResource Include="Resources\Tiled\water-sheet.tsx" />
+    <None Remove="Resources\Tilesets\characters.png" />
+    <EmbeddedResource Include="Resources\Tilesets\characters.png" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Aether.Physics2D" Version="2.1.0" />
     <PackageReference Include="DefaultEcs" Version="0.17.2" />
-    <PackageReference Include="Raylib-cs" Version="6.1.1" />
+    <PackageReference Include="Raylib-cs" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Resources\Fonts\IMMORTAL.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Resources\Tilesets\characters.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Resources\Tilesets\enviroment.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="Resources\Tilesets\player.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="Resources\Tilesets\skeleton.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="Resources\Tilesets\skeleton_swordless.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="Resources\Tilesets\slime.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="Resources\Tilesets\water-sheet.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
