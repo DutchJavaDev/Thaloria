@@ -12,12 +12,12 @@ namespace Thaloria.Game
     public ThaloriaGame()
     {
       _sceneManager = new SceneManager();
-      _sceneManager.AddScene(new MenuScene());
-      _sceneManager.AddScene(new GameScene());
     }
 
     public void Init()
     {
+      _sceneManager.AddScene(new MenuScene());
+      _sceneManager.AddScene(new GameScene());
       _sceneManager.SwitchToScene(SceneManagerEnum.MenuScene);
     }
 
