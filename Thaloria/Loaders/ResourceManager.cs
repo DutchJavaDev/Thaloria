@@ -7,18 +7,20 @@ namespace Thaloria.Loaders
   {
     private static readonly Dictionary<string, Font> Fonts = [];
     private static readonly Dictionary<string, Texture2D> Textures = [];
-    private static readonly string FontResourceFolder = "Resources/Fonts/";
-    private static readonly string TilesetResourceFolder = "Resources/Tilesets/";
 
     public static void LoadResourceFont(string name, string fileName)
     {
       if (Fonts.ContainsKey(name))
         return;
-
-      var path = $"{FontResourceFolder}{fileName}";
-
-      var font = LoadFont(path);
-
+      
+      var extension = Path.GetExtension(fileName);
+      
+      var path = AssemblyDataLoader.CreateFontResourcePath(fileName);
+      
+      using var stream = AssemblyDataLoader.GetResourceStream(path);
+      
+      var font = LoadFontFromMemory(extension, stream.ToArray(), 18, null,0);
+      
       Fonts.TryAdd(name, font);
     }
 
@@ -26,11 +28,15 @@ namespace Thaloria.Loaders
     {
       if (Textures.ContainsKey(name))
         return;
+      
+      var extension = Path.GetExtension(fileName);
+      
+      var path = AssemblyDataLoader.CreateTilesetResourcePath(fileName);
+      
+      using var stream = AssemblyDataLoader.GetResourceStream(path);
+        
+      var texture = LoadTextureFromImage(LoadImageFromMemory(extension, stream.ToArray()));
 
-      var path = $"{TilesetResourceFolder}{fileName}";
-      
-      var texture = LoadTexture(path);
-      
       Textures.TryAdd(name, texture);
     }
 
@@ -43,7 +49,7 @@ namespace Thaloria.Loaders
     {
       return Textures[name];
     }
-
+    
     public static void Dispose()
     {
       foreach (Font font in Fonts.Values)
