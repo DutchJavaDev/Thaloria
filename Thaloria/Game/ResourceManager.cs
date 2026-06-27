@@ -1,7 +1,8 @@
 ﻿using Raylib_cs;
+using Thaloria.Loaders;
 using static Raylib_cs.Raylib;
 
-namespace Thaloria.Loaders
+namespace Thaloria.Game
 {
   public static class ResourceManager
   {

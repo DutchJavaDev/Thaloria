@@ -23,11 +23,11 @@ public static class AssemblyDataLoader
 
         var stream = new MemoryStream();
         
-        resourceStream.CopyTo(stream);
+        resourceStream?.CopyTo(stream);
 
         return stream;
     }
-    public static async Task<T?> DeserilizeResouceFromStream<T>(string path) where T : class
+    public static async Task<T?> DeserilizeResouceFromStreamAsync<T>(string path) where T : class
     {
         await using var resourceStream = Program.CurrentAssembly.GetManifestResourceStream(path);
 
@@ -47,8 +47,6 @@ public static class AssemblyDataLoader
     }
 }
 
-internal class ResourceNotFoundExeception : Exception
+internal class ResourceNotFoundExeception(string message) : Exception(message)
 {
-    public ResourceNotFoundExeception(string message) : base(message)
-    { }
 }

@@ -8,11 +8,11 @@
     ],
     "fileStates": {
         "Thaloria.tmx": {
-            "scale": 3,
-            "selectedLayer": 4,
+            "scale": 2,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 525,
-                "y": 54.833333333333314
+                "x": 483.5,
+                "y": 187.25
             }
         },
         "enviroment.tsx": {

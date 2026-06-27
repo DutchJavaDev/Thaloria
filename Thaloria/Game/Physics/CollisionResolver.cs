@@ -24,7 +24,7 @@ namespace Thaloria.Game.Physics
       NpcCollisionHandlers.Add(0, PlayerCollisionHandler);
 
       //skeleton
-      //NpcCollisionHandlers.Add((int)ThaloriaNpc.Skeleton, SkeletonCollisionHandler);
+      NpcCollisionHandlers.Add((int)ThaloriaNpc.Skeleton, SkeletonCollisionHandler);
 
       PhysicsWorld.Instance.World.ContactManager.PostSolve += PostSolveCollision;
     }

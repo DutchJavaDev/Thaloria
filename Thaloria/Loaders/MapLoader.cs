@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Raylib_cs;
+using Thaloria.Game;
 using Thaloria.Game.ECS.Class;
 using Thaloria.Game.Physics;
 using Thaloria.Loaders.Tiled;
@@ -50,7 +51,7 @@ namespace Thaloria.Loaders
       {
         var mapResourcePath = AssemblyDataLoader.CreateMapResourcePath($"{mapName}{MapFileExtension}");
 
-        tiledMap = await AssemblyDataLoader.DeserilizeResouceFromStream<TiledMap>(mapResourcePath);
+        tiledMap = await AssemblyDataLoader.DeserilizeResouceFromStreamAsync<TiledMap>(mapResourcePath);
 
         MapWidth = tiledMap.Width * tiledMap.Tilewidth;
         MapHeight = tiledMap.Height * tiledMap.Tileheight;
@@ -75,7 +76,7 @@ namespace Thaloria.Loaders
 
       var tileSetResourcePath = AssemblyDataLoader.CreateMapResourcePath($"{tilesetName}{TilesetFileExtension}");
 
-      var tileSetImage = await AssemblyDataLoader.DeserilizeResouceFromStream<TiledMapTileSetImage>(tileSetResourcePath);
+      var tileSetImage = await AssemblyDataLoader.DeserilizeResouceFromStreamAsync<TiledMapTileSetImage>(tileSetResourcePath);
 
       if (tileSetImage != null)
       {
@@ -87,7 +88,7 @@ namespace Thaloria.Loaders
 
       // Load TileAtlas data
       var tileAtlasPath = AssemblyDataLoader.CreateTilesetResourcePath($"{ImageName.Split('.')[0]}.json");
-      var tileAtlas = await AssemblyDataLoader.DeserilizeResouceFromStream<TileAtlas>(tileAtlasPath);
+      var tileAtlas = await AssemblyDataLoader.DeserilizeResouceFromStreamAsync<TileAtlas>(tileAtlasPath);
       if (tileAtlas != null) CustomTileLoader.LoadAtlasData(tileAtlas);
 
       ResourceManager.LoadResourceTexture2DTileset(ImageName, ImageName);
@@ -106,9 +107,9 @@ namespace Thaloria.Loaders
     }
     private void LoadLayer(TiledMapLayer layer, int mapWidth, int mapHeight)
     {
-      for (int x = 0; x < mapWidth; x++)
+      for (var x = 0; x < mapWidth; x++)
       {
-        for (int y = 0; y < mapHeight; y++)
+        for (var y = 0; y < mapHeight; y++)
         {
           var tileId = GetTileId(x,y,layer.Data,layer.Width,layer.Height);
 
